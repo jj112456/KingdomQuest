@@ -2,6 +2,7 @@ package entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -25,6 +26,9 @@ public class Player extends Entity{
 		
 		screenX = gp.screenWidth/2 - (gp.tileSize/2);
 		screenY = gp.screenHeight/2 - (gp.tileSize/2);
+		
+		// adjust hit box
+		solidArea = new Rectangle(8, 16, 32, 32);
 		
 		setDefaultValues();
 		getPlayerImage();
@@ -56,41 +60,59 @@ public class Player extends Entity{
 	}
 	
 	public void update() {
-		
-		/*		STOPS sprite from moving while idle
 
 		if(keyH.upPressed == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true) {
+
+		
+			if(keyH.upPressed == true) {
+				direction = "up";
+			}
+			else if(keyH.downPressed == true) {
+				direction = "down";
+			}
+			else if(keyH.leftPressed == true) {
+				direction = "left";
+			}
+			else if(keyH.rightPressed == true) {
+				direction = "right";
+			}
 			
-		}
+			// checks tile collision
+			collisionOn = false;
+			gp.collisionChecker.checkTile(this);
+			
+			// if collision is false, the player can move
+			if (collisionOn == false) {
+				
+				switch(direction) {
+				case "up":
+					worldY -= speed;
+					break;
+				case "down":
+					worldY += speed;
+					break;
+				case "left":
+					worldX -= speed;
+					break;
+				case "right":
+					worldX += speed;
+					break;
+				}
 		
-		*/
-		
-		if(keyH.upPressed == true) {
-			direction = "up";
-			worldY -= speed;
-		}
-		else if(keyH.downPressed == true) {
-			direction = "down";
-			worldY += speed;
-		}
-		else if(keyH.leftPressed == true) {
-			direction = "left";
-			worldX -= speed;
-		}
-		else if(keyH.rightPressed == true) {
-			direction = "right";
-			worldX += speed;
-		}
-		
-		spriteCounter++;
-		if(spriteCounter> 25) {
-			if(spriteNum == 1) {
-				spriteNum = 2;
 			}
-			else if(spriteNum == 2) {
-				spriteNum = 1;
+		
+			// animation movement speed
+			spriteCounter++;
+			if(spriteCounter> 15) {
+				if(spriteNum == 1) {
+					spriteNum = 2;
+				}
+				else if(spriteNum == 2) {
+					spriteNum = 1;
+				}
+				spriteCounter = 0;
 			}
-			spriteCounter = 0;
+		
 		}
 		
 	}
@@ -137,8 +159,6 @@ public class Player extends Entity{
 		
 		
 	}
-	
-	
 	
 	
 	
