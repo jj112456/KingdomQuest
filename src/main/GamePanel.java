@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import entity.Player;
 import tile.TileManager;
+import object.SuperObject;
 
 import javax.swing.JPanel;
 
@@ -24,31 +25,45 @@ public class GamePanel extends JPanel implements Runnable{
 	// WORLD SETTINGS
 	public final int maxWorldCol = 14;
 	public final int maxWorldRow = 16;
-	public final int maxWorldWidth = tileSize * maxWorldCol;
-	public final int maxWorldHeight = tileSize * maxWorldRow;
 	
 	
 	// FPS
 	int FPS = 60;
 	
+	
+	// SYSTEM
 	TileManager tileM = new TileManager(this);
 	KeyHandler keyH = new KeyHandler();
-	Thread gameThread;
+	Sound sound = new Sound();
 	public CollisionChecker collisionChecker = new CollisionChecker(this);
+	public AssetSetter assetSetter = new AssetSetter(this);
+	Thread gameThread;
+	
+	
+	// ENTITY AND OBJECT
 	public Player player = new Player(this,keyH);
+	
+	// OBJECT DISPLAY LIMIT (increase if necessary)
+	public SuperObject obj[] = new SuperObject[10];
+	
 	
 	
 	public GamePanel() {
-		
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
 		this.setBackground(Color.black);
 		this.setDoubleBuffered(true);
 		this.addKeyListener(keyH);
 		this.setFocusable(true);
 	}
-
-	public void startGameThread() {
+	
+	public void setupGame() {
+		assetSetter.setObject();
 		
+		// plays the integer in the sound array
+		playMusic(0);
+	}
+	
+	public void startGameThread() {
 		gameThread = new Thread(this);
 		gameThread.start();
 	}
@@ -56,7 +71,6 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	@Override
 	public void run() {
-		
 		double drawInterval = 1000000000/FPS; // 0.01666 seconds
 		double nextDrawTime = System.nanoTime() + drawInterval;
 		
@@ -85,39 +99,55 @@ public class GamePanel extends JPanel implements Runnable{
 			
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
-			
-			
-			
-		}
-		
-		
+			}	
+		}	
 	}
 	
+	
 	public void update() {
-		
 		player.update();
 		
 	}
 	
 	
 	public void paintComponent(Graphics g) {
-		
 		super.paintComponent(g);
 		
 		Graphics2D g2 = (Graphics2D)g;
 		
 		// Draw order
 		
+		// draws tiles
 		tileM.draw(g2);
 		
+		//draws world objects
+		for(int i = 0; i < obj.length; i++) {
+			// check array for objects
+			if(obj[i] != null) {
+				obj[i].draw(g2, this);
+			}
+		}
+		
+		// draws player
 		player.draw(g2);
 		
-		// Should comment this out
-		g2.dispose();
+		//g2.dispose();
 	}
 	
 	
+	public void playMusic(int i) {
+		sound.setFile(i);
+		sound.play();
+		sound.loop();
+	}
 	
+	public void stopMusic() {
+		sound.stop();
+	}
+	
+	public void playSE(int i) {
+		sound.setFile(i);
+		sound.play();
+	}
 	
 }

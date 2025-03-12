@@ -18,6 +18,7 @@ public class Player extends Entity{
 	
 	public final int screenX;
 	public final int screenY;
+	int hasKey = 0;
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
@@ -30,13 +31,16 @@ public class Player extends Entity{
 		// adjust hit box
 		solidArea = new Rectangle(8, 16, 32, 32);
 		
+		solidAreaDefaultX = solidArea.x;
+		solidAreaDefaultY = solidArea.y;
+		
 		setDefaultValues();
 		getPlayerImage();
 	}
 	public void setDefaultValues() {
 		// player starting position
-		worldX = 500;
-		worldY = 500;
+		worldX = 1000;
+		worldY = 1000;
 		speed = 4;
 		direction = "down";
 	}
@@ -81,6 +85,12 @@ public class Player extends Entity{
 			collisionOn = false;
 			gp.collisionChecker.checkTile(this);
 			
+			// check object collision
+			int objIndex = gp.collisionChecker.checkObject(this, true);
+			
+			pickUpObject(objIndex);
+			
+			
 			// if collision is false, the player can move
 			if (collisionOn == false) {
 				
@@ -115,6 +125,31 @@ public class Player extends Entity{
 		
 		}
 		
+	}
+	
+	// effects of picking up the object in the over world
+	public void pickUpObject(int i) {
+		if(i != 999) {
+			// deletes object touched
+			String objectName = gp.obj[i].name;
+			
+			switch(objectName) {
+			case "Key":
+				gp.playSE(2);
+				hasKey++;
+				gp.obj[i] = null;
+				System.out.println("Key: " + hasKey);
+				break;
+			case "Door":
+				gp.playSE(1);
+				if(hasKey > 0) {
+					gp.obj[i] = null;
+					hasKey--;
+				}
+				System.out.println("Key: " + hasKey);
+				break;
+			}
+		}
 	}
 	
 	public void draw(Graphics2D g2) {

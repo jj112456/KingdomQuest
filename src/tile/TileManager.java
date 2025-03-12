@@ -26,15 +26,13 @@ public class TileManager {
 		
 		getTileImage();
 		
-		// path to text file
+		// path to map text file in use
 		loadMap("/maps/world01.txt");
 	}
 	
 	
 	public void getTileImage() {
-		
-		// Add new tile images
-		
+		// Add new tile images here:
 		try {
 			
 			tile[0] = new Tile();
@@ -58,7 +56,6 @@ public class TileManager {
 	}
 	
 	public void loadMap(String filePath) {
-		
 		
 		try {
 			InputStream is = getClass().getResourceAsStream(filePath);
@@ -91,16 +88,11 @@ public class TileManager {
 			
 		}
 		
-		
-		
-		
-		
 	}
 	
+	
+	
 	public void draw(Graphics2D g2) {
-		//g2.drawImage(tile[0].image, 0, 0, gp.tileSize,gp.tileSize, null);
-		//g2.drawImage(tile[1].image, 98, 0, gp.tileSize,gp.tileSize, null);
-		//g2.drawImage(tile[2].image, 196, 0, gp.tileSize,gp.tileSize, null);
 		
 		int worldCol = 0;
 		int worldRow = 0;
@@ -115,7 +107,6 @@ public class TileManager {
 			int screenY = worldY - gp.player.worldY + gp.player.screenY;
 			
 			//only loads tiles in view of camera
-			
 			if(worldX + gp.tileSize > gp.player.worldX - gp.player.screenX && 
 				worldX - gp.tileSize < gp.player.worldX + gp.player.screenX && 
 				worldY + gp.tileSize > gp.player.worldY - gp.player.screenY && 
@@ -124,7 +115,6 @@ public class TileManager {
 				g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
 			}
 			
-			
 			worldCol++;
 			
 			if(worldCol == gp.maxWorldCol) {
@@ -132,9 +122,6 @@ public class TileManager {
 				worldRow++;
 			}
 		}
-		
-		
-		
 		
 		
 	}
