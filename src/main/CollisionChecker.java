@@ -1,6 +1,7 @@
 package main;
 
 import entity.Entity;
+import java.util.Random;
 
 public class CollisionChecker {
 	
@@ -9,6 +10,7 @@ public class CollisionChecker {
 	public CollisionChecker(GamePanel gp) {
 		this.gp = gp;
 	}
+	
 	
 	public void checkTile(Entity entity) {
 		// change tile hit box size
@@ -31,7 +33,6 @@ public class CollisionChecker {
 			tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
 			if(gp.tileM.tile[tileNum1].collision == true || gp.tileM.tile[tileNum2].collision == true) {
 				entity.collisionOn = true;
-				// may need to change double tile collision here
 			}
 			break;
 		case "down":
@@ -61,7 +62,6 @@ public class CollisionChecker {
 		}
 		
 	}
-	
 	
 	
 	// Checks collision with object in world

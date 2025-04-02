@@ -14,7 +14,9 @@ public class Sound {
 		// sound path
 		
 		//world theme
-		soundURL[0] = getClass().getResource("/sound/FF6OverworldTheme.wav");
+		soundURL[0] = getClass().getResource("/sound/OverworldTheme.wav");
+		soundURL[3] = getClass().getResource("/sound/Route11.wav");
+		
 		
 		// object sounds
 		soundURL[1] = getClass().getResource("/sound/door.wav");

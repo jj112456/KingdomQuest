@@ -27,7 +27,7 @@ public class TileManager {
 		getTileImage();
 		
 		// path to map text file in use
-		loadMap("/maps/world01.txt");
+		loadMap("/maps/map01.txt");
 	}
 	
 	
@@ -37,6 +37,7 @@ public class TileManager {
 			
 			tile[0] = new Tile();
 			tile[0].image = ImageIO.read(getClass().getResource("/tiles/grass.png"));
+			tile[0].hasEncounters = true;
 			
 			tile[1] = new Tile();
 			tile[1].image = ImageIO.read(getClass().getResource("/tiles/wall.png"));

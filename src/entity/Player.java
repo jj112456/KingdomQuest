@@ -18,7 +18,8 @@ public class Player extends Entity{
 	
 	public final int screenX;
 	public final int screenY;
-	int hasKey = 0;
+	public int hasKey = 0;
+	
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
@@ -37,26 +38,52 @@ public class Player extends Entity{
 		setDefaultValues();
 		getPlayerImage();
 	}
+	
+
+	
 	public void setDefaultValues() {
 		// player starting position
-		worldX = 1000;
-		worldY = 1000;
+		worldX = 750;
+		worldY = 750;
 		speed = 4;
 		direction = "down";
+		
+		
+		type = 0;
+		name = "UserName";
+		
+		lvl = 5;
+		hp = 100;
+		attack = 10;
+		specialAttack = 10;
+		defense = 10;
+		specialDefense = 10;
+		attackSpeed = 10;
+		luck = 10;
+		
+		exp = 0;
+		nextLevelExp = 1000;
+		currency = 0;
+		
+		//currentWeapon;
+		//currentArmor;
+		
+		
+		
+		
 	}
 	
 	public void getPlayerImage() {
 		
 		try {
-			
-			up1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1.png"));
-			up2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_2.png"));
-			down1= ImageIO.read(getClass().getResourceAsStream("/player/boy_down_1.png"));
-			down2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_down_2.png"));
-			left1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_left_1.png"));
-			left2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_left_2.png"));
-			right1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_right_1.png"));
-			right2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_right_2.png"));
+			up1 = ImageIO.read(getClass().getResourceAsStream("/player/player_up_1.png"));
+			up2 = ImageIO.read(getClass().getResourceAsStream("/player/player_up_2.png"));
+			down1= ImageIO.read(getClass().getResourceAsStream("/player/player_down_1.png"));
+			down2 = ImageIO.read(getClass().getResourceAsStream("/player/player_down_2.png"));
+			left1 = ImageIO.read(getClass().getResourceAsStream("/player/player_left_1.png"));
+			left2 = ImageIO.read(getClass().getResourceAsStream("/player/player_left_2.png"));
+			right1 = ImageIO.read(getClass().getResourceAsStream("/player/player_right_1.png"));
+			right2 = ImageIO.read(getClass().getResourceAsStream("/player/player_right_2.png"));
 			
 		}catch(IOException e) {
 			e.printStackTrace();
@@ -138,16 +165,24 @@ public class Player extends Entity{
 				gp.playSE(2);
 				hasKey++;
 				gp.obj[i] = null;
-				System.out.println("Key: " + hasKey);
+				gp.gameState = gp.dialogueStateObject;
+				gp.ui.showMessage("Picked Up: " + "Key");
 				break;
 			case "Door":
 				gp.playSE(1);
 				if(hasKey > 0) {
 					gp.obj[i] = null;
 					hasKey--;
+					gp.gameState = gp.dialogueStateObject;
+					gp.ui.showMessage("Opened door with Key");
 				}
-				System.out.println("Key: " + hasKey);
+				else {
+					gp.gameState = gp.dialogueStateObject;
+					gp.ui.showMessage("A key is needed to open the door");
+				}
 				break;
+			// add chest case HERE
+			
 			}
 		}
 	}

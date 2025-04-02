@@ -17,6 +17,12 @@ public class SuperObject {
 	public int solidAreaDefaultX = 0;
 	public int solidAreaDefaultY = 0;
 	
+	
+	String dialogue[] = new String[20];
+	
+	
+	
+	
 	public void draw(Graphics2D g2, GamePanel gp) {
 		
 		int screenX = worldX - gp.player.worldX + gp.player.screenX;
@@ -30,5 +36,10 @@ public class SuperObject {
 			
 			g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
 		}
+	
+	
+		
+	
+	
 	}
 }

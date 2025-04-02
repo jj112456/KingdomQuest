@@ -5,8 +5,12 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import entity.Player;
+import entity.Skeleton;
+import entity.Entity;
+import entity.Ghost;
 import tile.TileManager;
 import object.SuperObject;
+import java.util.Random;
 
 import javax.swing.JPanel;
 
@@ -33,18 +37,31 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	// SYSTEM
 	TileManager tileM = new TileManager(this);
-	KeyHandler keyH = new KeyHandler();
-	Sound sound = new Sound();
+	KeyHandler keyH = new KeyHandler(this);
+	Sound music = new Sound();
+	Sound soundEffect = new Sound();
 	public CollisionChecker collisionChecker = new CollisionChecker(this);
 	public AssetSetter assetSetter = new AssetSetter(this);
+	public UI ui = new UI(this);
 	Thread gameThread;
 	
 	
 	// ENTITY AND OBJECT
 	public Player player = new Player(this,keyH);
-	
+	//public Entity enemy[] = new Entity[20];
+	public Ghost ghost = new Ghost(null);
 	// OBJECT DISPLAY LIMIT (increase if necessary)
 	public SuperObject obj[] = new SuperObject[10];
+	
+	
+	// GAME STATE
+	public int gameState;
+	public final int titleState = 0;
+	public final int playState = 1;
+	public final int menuState = 2;
+	public final int dialogueState = 3;
+	public final int dialogueStateObject = 4;
+	public final int battleState = 5;
 	
 	
 	
@@ -60,7 +77,10 @@ public class GamePanel extends JPanel implements Runnable{
 		assetSetter.setObject();
 		
 		// plays the integer in the sound array
-		playMusic(0);
+		//  CHANGE ------------- playMusic(0);
+		// DEFAULT STATE
+		gameState = titleState;
+		
 	}
 	
 	public void startGameThread() {
@@ -105,8 +125,13 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	
 	public void update() {
-		player.update();
 		
+		if(gameState == playState) {
+			player.update();
+		}
+		if(gameState == menuState) {
+			// later
+		}
 	}
 	
 	
@@ -115,9 +140,16 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		Graphics2D g2 = (Graphics2D)g;
 		
-		// Draw order
+		/* -------------- DRAW ORDER HERE MATTERS -------------- */
 		
-		// draws tiles
+		// TITLE SCREEN
+		if(gameState == titleState) {
+			ui.draw(g2, keyH);
+		}
+		
+		// OTHERS
+		else {
+			// draws tiles
 		tileM.draw(g2);
 		
 		//draws world objects
@@ -131,23 +163,49 @@ public class GamePanel extends JPanel implements Runnable{
 		// draws player
 		player.draw(g2);
 		
+		//UI
+		ui.draw(g2, keyH);
+		
 		//g2.dispose();
+		}
+		
+		
+		
 	}
+	
+	
+	//CHECKS FOR RANDOM COMBAT ENCOUNTER ON CERTAIN TILES
+	public void checkForEncounter(GamePanel gp) {
+	    int playerCol = gp.player.worldX / gp.tileSize;
+	    int playerRow = gp.player.worldY / gp.tileSize;
+	    int tileNum = gp.tileM.mapTileNum[playerCol][playerRow];
+
+	    if (gp.tileM.tile[tileNum].hasEncounters) {
+	        Random rand = new Random();
+	        int chance = rand.nextInt(100); // Random number between 0-99
+	        if (chance < 10) { // 10% encounter rate
+	            gp.gameState = gp.battleState;
+	        }
+	    }
+	}
+	
+
 	
 	
 	public void playMusic(int i) {
-		sound.setFile(i);
-		sound.play();
-		sound.loop();
+		music.setFile(i);
+		music.play();
+		music.loop();
 	}
 	
 	public void stopMusic() {
-		sound.stop();
+		music.stop();
 	}
 	
 	public void playSE(int i) {
-		sound.setFile(i);
-		sound.play();
+		soundEffect.setFile(i);
+		soundEffect.play();
 	}
+	
 	
 }
