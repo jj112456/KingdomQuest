@@ -27,7 +27,8 @@ public class TileManager {
 		getTileImage();
 		
 		// path to map text file in use
-		loadMap("/maps/map01.txt");
+		loadMap("/maps/map01.txt"/*, 0*/);
+		//loadMap("/maps/map02.txt", 1);
 	}
 	
 	
@@ -37,7 +38,7 @@ public class TileManager {
 			
 			tile[0] = new Tile();
 			tile[0].image = ImageIO.read(getClass().getResource("/tiles/grass.png"));
-			tile[0].hasEncounters = true;
+			tile[0].hasEncountersGrass = true;
 			
 			tile[1] = new Tile();
 			tile[1].image = ImageIO.read(getClass().getResource("/tiles/wall.png"));
@@ -49,6 +50,22 @@ public class TileManager {
 			
 			tile[3] = new Tile();
 			tile[3].image = ImageIO.read(getClass().getResource("/tiles/wood.png"));
+			tile[3].hasEncountersWood = true;
+			
+			tile[4] = new Tile();
+			tile[4].image = ImageIO.read(getClass().getResource("/tiles/tree.png"));
+			tile[4].collision = true;
+			
+			tile[5] = new Tile();
+			tile[5].image = ImageIO.read(getClass().getResource("/tiles/path.png"));
+			
+			tile[6] = new Tile();
+			tile[6].image = ImageIO.read(getClass().getResource("/tiles/torch.png"));
+			tile[6].collision = true;
+			
+			tile[7] = new Tile();
+			tile[7].image = ImageIO.read(getClass().getResource("/tiles/carpet.png"));
+			
 			
 			
 		}catch(IOException e){
@@ -57,6 +74,11 @@ public class TileManager {
 	}
 	
 	public void loadMap(String filePath) {
+		for (int col = 0; col < gp.maxWorldCol; col++) {
+		    for (int row = 0; row < gp.maxWorldRow; row++) {
+		        mapTileNum[col][row] = 0; // or some default tile number
+		    }
+		}
 		
 		try {
 			InputStream is = getClass().getResourceAsStream(filePath);

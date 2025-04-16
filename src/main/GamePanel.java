@@ -4,10 +4,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
 import entity.Player;
 import entity.Skeleton;
 import entity.Entity;
 import entity.Ghost;
+import entity.Zombie;
+import entity.Slime;
+import entity.SkeletonBoss;
+import entity.GhostBoss;
 import tile.TileManager;
 import object.SuperObject;
 import java.util.Random;
@@ -21,14 +27,15 @@ public class GamePanel extends JPanel implements Runnable{
 	final int scale = 3;
 	
 	public final int tileSize = originalTileSize * scale; // 96x96 tile
-	public final int maxScreenCol = 8;
+	// use 8 by 7 for now, 8 by 6 later
+	public final int maxScreenCol = 8;  
 	public final int maxScreenRow = 7;
 	public final int screenWidth = tileSize * maxScreenCol; // 768 pixels
 	public final int screenHeight = tileSize * maxScreenRow; // 672 pixels
 	
 	// WORLD SETTINGS
-	public final int maxWorldCol = 14;
-	public final int maxWorldRow = 16;
+	public final int maxWorldCol = 50; //14
+	public final int maxWorldRow = 50; //16
 	
 	
 	// FPS
@@ -36,7 +43,7 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	
 	// SYSTEM
-	TileManager tileM = new TileManager(this);
+	public TileManager tileM = new TileManager(this);
 	KeyHandler keyH = new KeyHandler(this);
 	Sound music = new Sound();
 	Sound soundEffect = new Sound();
@@ -48,8 +55,22 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	// ENTITY AND OBJECT
 	public Player player = new Player(this,keyH);
+	
 	//public Entity enemy[] = new Entity[20];
+	
 	public Ghost ghost = new Ghost(null);
+	
+	public Zombie zombie = new Zombie(null);
+	
+	public SkeletonBoss skeletonBoss = new SkeletonBoss(null);
+	
+	public Slime slime = new Slime(null);
+	
+	public GhostBoss ghostBoss = new GhostBoss(null);
+	
+	public Skeleton skeleton = new Skeleton(null);
+	
+	
 	// OBJECT DISPLAY LIMIT (increase if necessary)
 	public SuperObject obj[] = new SuperObject[10];
 	
@@ -61,8 +82,15 @@ public class GamePanel extends JPanel implements Runnable{
 	public final int menuState = 2;
 	public final int dialogueState = 3;
 	public final int dialogueStateObject = 4;
-	public final int battleState = 5;
+	public final int gameOverState = 5;
 	
+	public final int battleStateZombie = 6;
+	public final int battleStateSlime = 7;
+	public final int battleStateGhost = 8;
+	public final int battleStateSkeleton = 9;
+	
+	public final int battleStateSkeletonBoss = 10;
+	public final int battleStateGhostBoss = 11;
 	
 	
 	public GamePanel() {
@@ -76,8 +104,6 @@ public class GamePanel extends JPanel implements Runnable{
 	public void setupGame() {
 		assetSetter.setObject();
 		
-		// plays the integer in the sound array
-		//  CHANGE ------------- playMusic(0);
 		// DEFAULT STATE
 		gameState = titleState;
 		
@@ -179,14 +205,50 @@ public class GamePanel extends JPanel implements Runnable{
 	    int playerCol = gp.player.worldX / gp.tileSize;
 	    int playerRow = gp.player.worldY / gp.tileSize;
 	    int tileNum = gp.tileM.mapTileNum[playerCol][playerRow];
-
-	    if (gp.tileM.tile[tileNum].hasEncounters) {
+	    // TEMP
+	    
+	    /*
+	    if (gp.tileM.tile[tileNum].hasEncountersGrass) {
 	        Random rand = new Random();
 	        int chance = rand.nextInt(100); // Random number between 0-99
-	        if (chance < 10) { // 10% encounter rate
-	            gp.gameState = gp.battleState;
+	        if (chance < 3) { // 3% encounter rate
+	        	
+	        	gp.gameState = gp.battleStateZombie;
+	        	gp.gameState = gp.battleStateSlime;
+	        	
 	        }
 	    }
+	    */
+	    
+	    
+	    if (gp.tileM.tile[tileNum].hasEncountersGrass) {
+	        Random rand = new Random();
+	        int chance = rand.nextInt(100); // 0–99
+
+	        if (chance < 3) { // 3% encounter rate
+	            if (rand.nextBoolean()) {
+	                gp.gameState = gp.battleStateZombie;
+	            } else {
+	                gp.gameState = gp.battleStateSlime;
+	            }
+	        }
+	    }
+	    
+	    if (gp.tileM.tile[tileNum].hasEncountersWood) {
+	        Random rand = new Random();
+	        int chance = rand.nextInt(100); // 0–99
+
+	        if (chance < 3) { // 3% encounter rate
+	            if (rand.nextBoolean()) {
+	                gp.gameState = gp.battleStateGhost;
+	            } else {
+	                gp.gameState = gp.battleStateSkeleton;
+	            }
+	        }
+	    }
+	    
+	    
+	    
 	}
 	
 

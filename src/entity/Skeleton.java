@@ -1,6 +1,8 @@
 package entity;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
@@ -10,22 +12,25 @@ public class Skeleton extends Entity {
 	
 	public Skeleton(GamePanel gp) {
 		super();
-		type = 1;
-		name = "Skeleton";
-		hp = 30;
-		getImage();
+        type = 1;
+        name = "Skeleton";
+        hp = 30;
+        hpBase = 30;
+        
+        attack = 10;
+        expDrop = 25;
 		
 	}
 	
-public void getImage() {
-		
-		try {
-			down1 = ImageIO.read(getClass().getResourceAsStream("/enemy/skeleton.png"));
-			
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
-	}
+	public BufferedImage getSkeletonImage() {
+        BufferedImage skeletonImage = null;
+        try (InputStream is = getClass().getResourceAsStream("/enemy/skeleton.png")) {
+            skeletonImage = ImageIO.read(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return skeletonImage;
+    }
 	
 	
 }

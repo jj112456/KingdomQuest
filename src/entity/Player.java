@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 
 import main.GamePanel;
 import main.KeyHandler;
+import tile.TileManager;
 
 public class Player extends Entity{
 	
@@ -43,17 +44,18 @@ public class Player extends Entity{
 	
 	public void setDefaultValues() {
 		// player starting position
-		worldX = 750;
-		worldY = 750;
+		worldX = 5* gp.tileSize;
+		worldY = 29 * gp.tileSize;
 		speed = 4;
 		direction = "down";
 		
 		
 		type = 0;
-		name = "UserName";
+		name = "Player";
 		
-		lvl = 5;
+		lvl = 1;
 		hp = 100;
+		hpBase = 100;
 		attack = 10;
 		specialAttack = 10;
 		defense = 10;
@@ -62,12 +64,8 @@ public class Player extends Entity{
 		luck = 10;
 		
 		exp = 0;
-		nextLevelExp = 1000;
+		nextLevelExp = 100;
 		currency = 0;
-		
-		//currentWeapon;
-		//currentArmor;
-		
 		
 		
 		
@@ -90,6 +88,8 @@ public class Player extends Entity{
 		}
 	}
 	
+	
+	
 	public void update() {
 
 		if(keyH.upPressed == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true) {
@@ -106,6 +106,10 @@ public class Player extends Entity{
 			}
 			else if(keyH.rightPressed == true) {
 				direction = "right";
+			}
+			else if(keyH.escapePressed == true) {
+				// no idea why this does not work
+				gp.playSE(2);
 			}
 			
 			// checks tile collision
@@ -154,7 +158,9 @@ public class Player extends Entity{
 		
 	}
 	
-	// effects of picking up the object in the over world
+	
+	
+	// Effects of picking up the object in the over world
 	public void pickUpObject(int i) {
 		if(i != 999) {
 			// deletes object touched
@@ -168,6 +174,12 @@ public class Player extends Entity{
 				gp.gameState = gp.dialogueStateObject;
 				gp.ui.showMessage("Picked Up: " + "Key");
 				break;
+			case "Mini Boss":
+				gp.gameState = gp.battleStateSkeletonBoss;
+				break;
+			case "Final Boss":
+				gp.gameState = gp.battleStateGhostBoss;
+				break;
 			case "Door":
 				gp.playSE(1);
 				if(hasKey > 0) {
@@ -175,6 +187,8 @@ public class Player extends Entity{
 					hasKey--;
 					gp.gameState = gp.dialogueStateObject;
 					gp.ui.showMessage("Opened door with Key");
+					worldX = gp.tileSize * 47;
+					worldY = gp.tileSize * 3;
 				}
 				else {
 					gp.gameState = gp.dialogueStateObject;
@@ -186,6 +200,8 @@ public class Player extends Entity{
 			}
 		}
 	}
+	
+	
 	
 	public void draw(Graphics2D g2) {
 		
@@ -226,7 +242,6 @@ public class Player extends Entity{
 			break;
 		}
 		g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
-		
 		
 	}
 	

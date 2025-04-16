@@ -29,6 +29,17 @@ public class UI {
 	double playTime;
 	DecimalFormat dFormat = new DecimalFormat("#0.00");
 	public String currentText = "";
+	
+	
+	
+	// new stuff
+	public String battleMessage = "";
+	
+	public boolean messageActive = false;
+	private int messageCounter = 0;
+	private int messageDuration = 120; // 2 seconds at 60 FPS
+
+	
 	public int commandNum = 0;
 	
 	private BufferedImage cursorImage;
@@ -36,13 +47,27 @@ public class UI {
 	private BufferedImage playerBattleImage;
 	private BufferedImage enemyBattleImage;
 	
-	private Player player;
-	private Ghost ghost;
+	
+	
+	
+	
+	// Create Player and enemy here?
+	
+	public void setEnemyBattleImage(BufferedImage image) {
+	    this.enemyBattleImage = image;
+	}
+
 	
 	public UI(GamePanel gp) {
 		this.gp = gp;
-
-
+		
+		/*
+		// Get the ghost image after gp is initialized
+	    if (gp.ghost != null) {
+	        enemyBattleImage = gp.ghost.getGhostImage();
+	    }
+		*/
+		
 		InputStream is = getClass().getResourceAsStream("/font/final_fantasy_36_font.ttf");
 		try {
 			FF6Font = Font.createFont(Font.TRUETYPE_FONT, is);
@@ -70,18 +95,18 @@ public class UI {
 	        e.printStackTrace();
 	    }
 	    
+	    /*
 	    try {
 	        InputStream is4 = getClass().getResourceAsStream("/enemy/ghost.png");
 	        enemyBattleImage = ImageIO.read(is4);
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
-		    
+		*/
+	    
 	}
 
 
-	
-	
 	public void showMessage(String text) {
 		// stop player when text appears
 		//player.speed = 0;
@@ -103,6 +128,8 @@ public class UI {
 		// PLAY STATE
 		if (gp.gameState == gp.playState) {
 			// play state
+			//add music
+			//gp.playMusic(0);
 		}
 		// PAUSE STATE
 		if(gp.gameState == gp.menuState) {
@@ -115,9 +142,54 @@ public class UI {
 		if(gp.gameState == gp.dialogueStateObject) {
 			drawObjectScreen();
 		}
-		if(gp.gameState == gp.battleState) {
-			drawBattleScreen();
+		if(gp.gameState == gp.gameOverState) {
+			drawGameOverScreen();
 		}
+		
+		
+		
+		
+		// BASIC ENEMY BATTLES ------------------------------------------------
+		if(gp.gameState == gp.battleStateZombie) {
+			BufferedImage someEnemyImage = gp.zombie.getZombieImage();
+			gp.ui.setEnemyBattleImage(someEnemyImage);
+			drawBattleScreen();
+			
+		}
+		if(gp.gameState == gp.battleStateGhost) {
+			BufferedImage someEnemyImage = gp.ghost.getGhostImage();
+			gp.ui.setEnemyBattleImage(someEnemyImage);
+			drawBattleScreen();
+			
+		}
+		if(gp.gameState == gp.battleStateSlime) {
+			BufferedImage someEnemyImage = gp.slime.getSlimeImage();
+			gp.ui.setEnemyBattleImage(someEnemyImage);
+			drawBattleScreen();
+			
+		}
+		if(gp.gameState == gp.battleStateSkeleton) {
+			BufferedImage someEnemyImage = gp.skeleton.getSkeletonImage();
+			gp.ui.setEnemyBattleImage(someEnemyImage);
+			drawBattleScreen();
+			
+		}
+		// BOSS BATTLES -------------------------------------------------------
+		if(gp.gameState == gp.battleStateSkeletonBoss) {
+			BufferedImage someEnemyImage = gp.skeleton.getSkeletonImage();
+			gp.ui.setEnemyBattleImage(someEnemyImage);
+			drawBattleScreen();
+			
+		}
+		if(gp.gameState == gp.battleStateGhostBoss) {
+			BufferedImage someEnemyImage = gp.ghostBoss.getGhostBossImage();
+			gp.ui.setEnemyBattleImage(someEnemyImage);
+			drawBattleScreen();
+			
+		}
+		
+		
+		
 		
 		
 		
@@ -143,7 +215,80 @@ public class UI {
 			
 			
 		}
+		
+		
+		if(messageActive && !battleMessage.equals("")) {
+		    g2.setFont(g2.getFont().deriveFont(20F));
+		    g2.setColor(Color.white);
+		    g2.drawString(battleMessage, 50, gp.tileSize * 10); // Change position if needed
+
+		    messageCounter++;
+		    if(messageCounter > messageDuration) {
+		        messageActive = false;
+		        battleMessage = "";
+		        messageCounter = 0;
+		    }
+		}
+
+
 	}
+	
+	
+	
+	
+	// GAME OVER SCREEN----------------------------------
+	public void drawGameOverScreen(){
+		
+		//Background
+		g2.setColor(Color.black);
+		g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+		
+		//Title Name
+		g2.setFont(FF6Font.deriveFont(Font.BOLD, 80F));
+
+		String text = "Game Over";
+		int x = 85;
+		int y = 125;
+		
+		// shadow
+		g2.setColor(Color.black);
+		g2.drawString(text, x+5, y+5);
+				
+		// text
+		g2.setColor(Color.white);
+		g2.drawString(text, x, y);
+		
+		
+		//MENU
+		g2.setFont(g2.getFont().deriveFont(Font.CENTER_BASELINE,50F));
+		g2.setColor(Color.white);
+			
+				
+		text = "Return to Title Screen";
+		x = (768/2) - (48*2)-48;
+		y = 350;
+		g2.drawString(text, x, y);
+		if(commandNum == 0) {
+			if (cursorImage != null) {
+			    g2.drawImage(cursorImage, x - gp.tileSize, y - gp.tileSize / 2, gp.tileSize, gp.tileSize, null);
+			}
+
+		}
+				
+		text = "Quit Game";
+		x = (768/2) - (48*2)-48;
+		y = 400;
+		g2.drawString(text, x, y);
+		if(commandNum == 1) {
+			if (cursorImage != null) {
+			    g2.drawImage(cursorImage, x - gp.tileSize, y - gp.tileSize / 2, gp.tileSize, gp.tileSize, null);
+			}
+
+		}
+				
+		
+	}
+	
 	
 	
 	// TITLE SCREEN ---------------------------------------------------
@@ -163,7 +308,6 @@ public class UI {
 		x2 += gp.tileSize;
 		y2 += gp.tileSize;
 		g2.drawString(currentText, x2, y2);
-		
 		
 		
 		//Title Name
@@ -228,14 +372,10 @@ public class UI {
 	
 	// MENU SCREEN -----------------------------------------------
 	public void drawMenuScreen() {
-		//gp.playSE(2);
 		
 		//Background
 		g2.setColor(Color.black);
 		g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
-		
-		
-		//g2.		x, y, width, height, 35, 35
 		
 		
 		// main box
@@ -275,13 +415,9 @@ public class UI {
 		
 		
 		
-		
-		
 		//Title Name
 		g2.setFont(FF6Font.deriveFont(Font.BOLD, 50F));
 
-		
-		
 		
 		String text2 = "Overworld";  // add code to display Current Location
 		g2.setColor(Color.black);
@@ -289,13 +425,6 @@ public class UI {
 		
 		g2.setColor(Color.white);
 		g2.drawString(text2, 400, 625);
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		String text4 = "Item";  // ADD CODE TO SAVE
@@ -400,12 +529,60 @@ public class UI {
 	        int playerHeight = 128;
 	        g2.drawImage(playerBattleImage, playerX, playerY, playerWidth, playerHeight, null);
 	    }
+	    
+	    
+	    
+	    String text103 = String.valueOf(gp.player.getName());
+	    g2.setColor(Color.black);
+	    g2.drawString(text103, 200+5, 125+5);
+	    g2.setColor(Color.white);
+	    g2.drawString(text103, 200, 125);
+	    
+	    String text102 = String.valueOf(gp.player.getLvl());
+	    String newText102 = "Level: " + text102;
+	    g2.setColor(Color.black);
+	    g2.drawString(newText102, 200+5, 170+5);
+	    g2.setColor(Color.white);
+	    g2.drawString(newText102, 200, 170);
+	    
+	    String text99 = String.valueOf(gp.player.getHp());
+	    String newText99 = "HP: " + text99;
+	    g2.setColor(Color.black);
+	    g2.drawString(newText99, 200+5, 215+5);
+	    g2.setColor(Color.white);
+	    g2.drawString(newText99, 200, 215);
+	    
+	    String text101 = String.valueOf(gp.player.getExp());
+	    String newText101 = "EXP: " + text101;
+	    g2.setColor(Color.black);
+	    g2.drawString(newText101, 200+5, 260+5);
+	    g2.setColor(Color.white);
+	    g2.drawString(newText101, 200, 260);
+	    
+	    
+	    
+	    
+	    
+	    /*
+	    String text100 = String.valueOf(gp.player.getUltimate());
+	    g2.setColor(Color.black);
+	    g2.drawString(text100, 675, 515);
+	    g2.setColor(Color.white);
+	    g2.drawString(text100, 675, 515);
+	    */
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
 		
 	}
 	
 	
 	public void drawBattleScreen() {
-		
 		
 	    Color c = new Color(10, 29, 97);
 	    Color c2 = new Color(18, 164, 222);
@@ -416,19 +593,24 @@ public class UI {
 	    g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 	    g2.setColor(c2);
 	    g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight / 2);
+	    
 
-	    // Draw player image
+	    // Draw the player battle sprite
 	    if (playerBattleImage != null) {
-	        int playerX = 100; // Adjust position as needed
+	    	int playerX = 100; // Adjust position as needed
 	        int playerY = 275;
 	        int playerWidth = 128;  // Adjust size as needed
 	        int playerHeight = 128;
 	        g2.drawImage(playerBattleImage, playerX, playerY, playerWidth, playerHeight, null);
 	    }
-	    
-	    // Draw Enemy Image
+
+	    // Draw the ghost (enemy) battle sprite
+	    if (enemyBattleImage == null && gp.ghost != null) {
+	        enemyBattleImage = gp.ghost.getGhostImage(); // Fetch it here if not already loaded
+	    }
+
 	    if (enemyBattleImage != null) {
-	        int enemyX = gp.screenWidth-200;  // Adjust position
+	    	int enemyX = gp.screenWidth-200;  // Adjust position
 	        int enemyY = 275;  // Adjust position
 	        int enemyWidth = 128;
 	        int enemyHeight = 128;
@@ -490,7 +672,31 @@ public class UI {
 	    
 	    
 	    g2.setFont(FF6Font.deriveFont(Font.CENTER_BASELINE, 35F));
+	    gp.player.getHp();
 	    
+	    
+	    String text99 = String.valueOf(gp.player.getHp());
+	    g2.setColor(Color.black);
+	    g2.drawString(text99, 400, 515);
+	    g2.setColor(Color.white);
+	    g2.drawString(text99, 400, 515);
+	    
+	    /*
+	    String text100 = String.valueOf(gp.player.getUltimate());
+	    g2.setColor(Color.black);
+	    g2.drawString(text100, 675, 515);
+	    g2.setColor(Color.white);
+	    g2.drawString(text100, 675, 515);
+	    */
+	    
+	    String text101 = String.valueOf(gp.player.getExp());
+	    g2.setColor(Color.black);
+	    g2.drawString(text101, 650, 515);
+	    g2.setColor(Color.white);
+	    g2.drawString(text101, 650, 515);
+	    
+	    
+
 	    
 	    // HEADINGS -----------------------------------------
 	    
@@ -499,11 +705,6 @@ public class UI {
 	    g2.drawString(text6, 50, 515);
 	    g2.setColor(Color.white);
 	    g2.drawString(text6, 50, 515);
-	    
-	    
-	    
-	    
-	    
 	    
 	    
 	    String text7 = "Attack";
@@ -559,6 +760,71 @@ public class UI {
 		}
 	    
 	    
+	    
+	    
+	    if(!battleMessage.equals("")) {
+	        
+	    	//SCREEN OVERLAY
+	    	g2.setColor(c);
+		    g2.fillRoundRect(0, 450, 350, 225, 35, 35);
+		    g2.setColor(Color.white);
+		    g2.setStroke(new BasicStroke(5));
+		    g2.drawRoundRect(5, 455, 340, 215, 25, 25);
+		    
+		    //---------------------------------------------------------------------
+		    //New Message Screen
+	    	g2.setColor(c);
+		    g2.fillRoundRect(0, 405, 768, 45, 35, 35);
+		    g2.setColor(Color.white);
+		    g2.setStroke(new BasicStroke(5));
+		    g2.drawRoundRect(0, 405, 768, 45, 25, 25);
+		    
+		    
+		    g2.setFont(FF6Font.deriveFont(Font.BOLD, 25F));
+	    	String text16 = "Name";
+		    g2.setColor(Color.black);
+		    g2.drawString(text16, 50, 475);
+		    g2.setColor(Color.white);
+		    g2.drawString(text16, 50, 475);
+		    String text17 = "Commands";
+		    g2.setColor(Color.black);
+		    g2.drawString(text17, 175, 475);
+		    g2.setColor(Color.white);
+		    g2.drawString(text17, 175, 475);
+		    g2.setFont(FF6Font.deriveFont(Font.CENTER_BASELINE, 35F));
+	    	String text11 = "Player";
+		    g2.setColor(Color.black);
+		    g2.drawString(text11, 50, 515);
+		    g2.setColor(Color.white);
+		    g2.drawString(text11, 50, 515);
+		    String text12 = "Attack";
+		    g2.setColor(Color.black);
+		    g2.drawString(text12, 175, 515);
+		    g2.setColor(Color.white);
+		    g2.drawString(text12, 175, 515);
+		    String text13 = "Sp. Attack";
+		    g2.setColor(Color.black);
+		    g2.drawString(text13, 175, 545);
+		    g2.setColor(Color.white);
+		    g2.drawString(text13, 175, 545);
+		    String text14 = "Ultimate";
+		    g2.setColor(Color.black);
+		    g2.drawString(text14, 175, 575);
+		    g2.setColor(Color.white);
+		    g2.drawString(text14, 175, 575); 
+		    String text15 = "Item";
+		    g2.setColor(Color.black);
+		    g2.drawString(text15, 175, 605);
+		    g2.setColor(Color.white);
+		    g2.drawString(text15, 175, 605);
+		    
+	    	
+	        // Battle Text
+		    g2.setFont(g2.getFont().deriveFont(30F));
+	        g2.setColor(Color.white);
+	        g2.drawString(battleMessage, 10, 436); // Adjust X/Y for positioning
+	        
+	    }
 	    
 	}
 
