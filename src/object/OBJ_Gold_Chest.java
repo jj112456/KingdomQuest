@@ -4,11 +4,11 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class OBJ_Chest extends SuperObject {
+public class OBJ_Gold_Chest extends SuperObject {
 	
-public OBJ_Chest() {
+public OBJ_Gold_Chest() {
 		
-		name = "Chest";
+		name = "Gold Chest";
 		try {
 			image = ImageIO.read(getClass().getResourceAsStream("/objects/chest.png"));
 		}catch(IOException e) {

@@ -42,10 +42,21 @@ public class Entity {
 	public int currency;
 	
 	public int expDrop;
+	
+	public int potion;
+	
 
 	
 	
 	
+	public int getPotion() {
+		return potion;
+	}
+
+	public void setPotion(int potion) {
+		this.potion = potion;
+	}
+
 	public int getHpBase() {
 		return hpBase;
 	}

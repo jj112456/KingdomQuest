@@ -15,13 +15,13 @@ public class CombatSystemSlime {
             int slimeHp = gp.slime.getHp() - gp.player.getAttack();
             gp.slime.setHp(slimeHp);
 
-            int playerHp = gp.player.getHp() - gp.slime.getSpecialAttack();
+            int playerHp = gp.player.getHp() - gp.slime.getAttack();
             gp.player.setHp(playerHp);
 
             gp.ui.battleMessage = "The player attacks and does " + gp.player.getAttack() + " damage";
             gp.ui.messageActive = true;
 
-            gp.ui.battleMessage = "The slime attacks back and does " + gp.slime.getSpecialAttack() + " damage";
+            gp.ui.battleMessage = "The slime attacks back and does " + gp.slime.getAttack() + " damage";
         } else {
             //gp.ui.battleMessage = "Enemy Defeated! EXP Gained: " + gp.slime.getExpDrop();
             //gp.ui.messageActive = true;
@@ -38,13 +38,13 @@ public class CombatSystemSlime {
             int slimeHp = gp.slime.getHp() - gp.player.getSpecialAttack();
             gp.slime.setHp(slimeHp);
 
-            int playerHp = gp.player.getHp() - gp.slime.getSpecialAttack();
+            int playerHp = gp.player.getHp() - gp.slime.getAttack();
             gp.player.setHp(playerHp);
 
             gp.ui.battleMessage = "The player uses a special attack and does " + gp.player.getSpecialAttack() + " damage";
             gp.ui.messageActive = true;
 
-            gp.ui.battleMessage = "The slime attacks back and does " + gp.slime.getSpecialAttack() + " damage";
+            gp.ui.battleMessage = "The slime attacks back and does " + gp.slime.getAttack() + " damage";
         } else {
             //gp.ui.battleMessage = "Enemy Defeated! EXP Gained: " + gp.slime.getExpDrop();
         	//gp.ui.messageActive = true;

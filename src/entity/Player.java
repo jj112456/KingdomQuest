@@ -10,6 +10,8 @@ import javax.imageio.ImageIO;
 
 import main.GamePanel;
 import main.KeyHandler;
+import object.OBJ_Chest;
+import object.OBJ_Open_Chest;
 import tile.TileManager;
 
 public class Player extends Entity{
@@ -44,8 +46,8 @@ public class Player extends Entity{
 	
 	public void setDefaultValues() {
 		// player starting position
-		worldX = 5* gp.tileSize;
-		worldY = 29 * gp.tileSize;
+		worldX = 6 * gp.tileSize;
+		worldY = 43 * gp.tileSize;
 		speed = 4;
 		direction = "down";
 		
@@ -67,6 +69,7 @@ public class Player extends Entity{
 		nextLevelExp = 100;
 		currency = 0;
 		
+		potion = 0;
 		
 		
 	}
@@ -179,6 +182,44 @@ public class Player extends Entity{
 				break;
 			case "Final Boss":
 				gp.gameState = gp.battleStateGhostBoss;
+				break;
+			case "Chest":
+				//
+				gp.playSE(1);
+				gp.gameState = gp.dialogueStateObject;
+				gp.ui.showMessage("Potion was inside");
+				gp.player.setPotion((gp.player.getPotion())+1);
+				gp.obj[i] = null;
+				
+				gp.obj[7] = new OBJ_Open_Chest();
+				gp.obj[7].worldX = 5 * gp.tileSize;
+				gp.obj[7].worldY = 1 * gp.tileSize;
+				
+				break;
+			case "Silver Chest":
+				gp.playSE(1);
+				gp.gameState = gp.dialogueStateObject;
+				gp.ui.showMessage("Armor was inside (Defense +2)");
+				gp.player.setAttack(gp.player.getDefense()+2);
+				gp.player.setAttack(gp.player.getSpecialDefense()+2);
+				gp.obj[i] = null;
+				
+				gp.obj[8] = new OBJ_Open_Chest();
+				gp.obj[8].worldX = 7 * gp.tileSize;
+				gp.obj[8].worldY = 28 * gp.tileSize;
+				
+				break;
+			case "Gold Chest":
+				gp.playSE(1);
+				gp.gameState = gp.dialogueStateObject;
+				gp.ui.showMessage("A new Weapon was inside (Attack +2)");
+				gp.player.setAttack(gp.player.getAttack()+2);
+				gp.obj[i] = null;
+				
+				gp.obj[9] = new OBJ_Open_Chest();
+				gp.obj[9].worldX = 45 * gp.tileSize;
+				gp.obj[9].worldY = 3 * gp.tileSize;
+				
 				break;
 			case "Door":
 				gp.playSE(1);

@@ -57,11 +57,14 @@ public class CombatSystemZombie {
     }
 
     public void handleUltimate() {
-        System.out.println("Not ready!");
+        //System.out.println("Not ready!");
     }
 
     public void handleItem() {
-        System.out.println("No Items!");
+    	if(gp.player.getPotion()>=1) {
+    		gp.player.setHp((gp.player.getHp())+20);
+    	}
+        //System.out.println("No Items!");
     }
 }
 

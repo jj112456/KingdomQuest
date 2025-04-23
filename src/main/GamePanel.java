@@ -72,7 +72,7 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	
 	// OBJECT DISPLAY LIMIT (increase if necessary)
-	public SuperObject obj[] = new SuperObject[10];
+	public SuperObject obj[] = new SuperObject[15];
 	
 	
 	// GAME STATE
