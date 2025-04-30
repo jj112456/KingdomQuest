@@ -15,7 +15,7 @@ public class Slime extends Entity {
         type = 1;
         name = "Slime";
         hp = 20;
-        hpBase = 20;
+        maxHp = 20;
         
         attack = 5;
         expDrop = 10;

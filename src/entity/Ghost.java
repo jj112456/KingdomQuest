@@ -15,7 +15,7 @@ public class Ghost extends Entity {
         type = 1;
         name = "Ghost";
         hp = 35;
-        hpBase = 35;
+        maxHp = 35;
         
         specialAttack = 5;
         expDrop = 25;

@@ -26,12 +26,16 @@ public class Entity {
 	public String name;
 	
 	public int lvl;
+	
 	public int hp;
-	public int hpBase;
-	public int attack;
-	public int specialAttack;
+	public int maxHp;
 	public int defense;
 	public int specialDefense;
+	
+	public int attack;
+	public int specialAttack;
+	
+	
 	public int attackSpeed;
 	public int luck;
 	
@@ -57,12 +61,12 @@ public class Entity {
 		this.potion = potion;
 	}
 
-	public int getHpBase() {
-		return hpBase;
+	public int getMaxHp() {
+		return maxHp;
 	}
 
-	public void setHpBase(int hpBase) {
-		this.hpBase = hpBase;
+	public void setMaxHp(int maxHp) {
+		this.maxHp = maxHp;
 	}
 
 	public int getSpeed() {

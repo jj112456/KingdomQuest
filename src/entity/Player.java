@@ -57,7 +57,7 @@ public class Player extends Entity{
 		
 		lvl = 1;
 		hp = 100;
-		hpBase = 100;
+		maxHp = 100;
 		attack = 10;
 		specialAttack = 10;
 		defense = 10;
@@ -179,9 +179,11 @@ public class Player extends Entity{
 				break;
 			case "Mini Boss":
 				gp.gameState = gp.battleStateSkeletonBoss;
+				gp.obj[i] = null;
 				break;
 			case "Final Boss":
 				gp.gameState = gp.battleStateGhostBoss;
+				gp.obj[i] = null;
 				break;
 			case "Chest":
 				//
@@ -219,7 +221,6 @@ public class Player extends Entity{
 				gp.obj[9] = new OBJ_Open_Chest();
 				gp.obj[9].worldX = 45 * gp.tileSize;
 				gp.obj[9].worldY = 3 * gp.tileSize;
-				
 				break;
 			case "Door":
 				gp.playSE(1);

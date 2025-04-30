@@ -20,6 +20,8 @@ import java.util.Random;
 
 import javax.swing.JPanel;
 
+import data.SaveLoad;
+
 public class GamePanel extends JPanel implements Runnable{
 	
 	//Screen Settings
@@ -51,6 +53,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public AssetSetter assetSetter = new AssetSetter(this);
 	public UI ui = new UI(this);
 	Thread gameThread;
+	SaveLoad saveLoad = new SaveLoad(this);
 	
 	
 	// ENTITY AND OBJECT

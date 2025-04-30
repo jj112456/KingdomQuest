@@ -15,7 +15,7 @@ public class Skeleton extends Entity {
         type = 1;
         name = "Skeleton";
         hp = 30;
-        hpBase = 30;
+        maxHp = 30;
         
         attack = 10;
         expDrop = 25;

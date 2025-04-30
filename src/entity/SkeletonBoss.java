@@ -15,7 +15,7 @@ public class SkeletonBoss extends Entity {
         type = 1;
         name = "Skeleton Boss";
         hp = 100;
-        hpBase = 100;
+        maxHp = 100;
         
         attack = 15;
         expDrop = 125;

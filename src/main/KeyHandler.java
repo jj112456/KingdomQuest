@@ -57,10 +57,13 @@ public class KeyHandler implements KeyListener{
 			if(code == KeyEvent.VK_ENTER) {
 				if(gp.ui.commandNum == 0) {
 					gp.gameState = gp.playState;
-					//gp.playMusic(0);
+					gp.playMusic(0);
 				}
 				if(gp.ui.commandNum == 1) {
-					// ADD WHEN SAVE
+					// ADD WHEN LOADING SAVE
+					gp.saveLoad.load();
+					gp.gameState = gp.playState;
+					gp.playMusic(0);
 				}
 				if(gp.ui.commandNum == 2) {
 					System.exit(0);
@@ -227,8 +230,8 @@ public class KeyHandler implements KeyListener{
 			    
 			    // GAME OVER if Player HP Reaches 0
 				if(gp.player.getHp() <= 0) {
-					gp.player.setHp(gp.player.getHpBase());
-					gp.ghost.setHp(gp.ghost.getHpBase());
+					gp.player.setHp(gp.player.getMaxHp());
+					gp.ghost.setHp(gp.ghost.getMaxHp());
 					gp.gameState = gp.gameOverState;
 				}
 					
@@ -318,6 +321,8 @@ public class KeyHandler implements KeyListener{
 				}
 				if(gp.ui.commandNum == 4) {
 					// save
+					gp.saveLoad.save();
+					// add message
 				}
 			}
 		}
