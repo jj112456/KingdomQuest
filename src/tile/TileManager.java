@@ -38,7 +38,7 @@ public class TileManager {
 			
 			tile[0] = new Tile();
 			tile[0].image = ImageIO.read(getClass().getResource("/tiles/grass.png"));
-			//tile[0].hasEncountersGrass = true;
+			tile[0].hasEncountersGrass = true;
 			
 			tile[1] = new Tile();
 			tile[1].image = ImageIO.read(getClass().getResource("/tiles/wall.png"));
@@ -50,7 +50,7 @@ public class TileManager {
 			
 			tile[3] = new Tile();
 			tile[3].image = ImageIO.read(getClass().getResource("/tiles/wood.png"));
-			//tile[3].hasEncountersWood = true;
+			tile[3].hasEncountersWood = true;
 			
 			tile[4] = new Tile();
 			tile[4].image = ImageIO.read(getClass().getResource("/tiles/tree.png"));
