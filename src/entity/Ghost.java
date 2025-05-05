@@ -14,10 +14,10 @@ public class Ghost extends Entity {
         super();
         type = 1;
         name = "Ghost";
-        hp = 35;
-        maxHp = 35;
+        hp = 45;
+        maxHp = 45;
         
-        specialAttack = 5;
+        specialAttack = 25;
         expDrop = 25;
     }
 

@@ -1,5 +1,7 @@
 package ai;
 
+import java.util.Random;
+
 import main.GamePanel;
 
 public class CombatSystemSkeleton {
@@ -11,57 +13,68 @@ public class CombatSystemSkeleton {
     }
 
     public void handleAttack() {
-        if (gp.skeleton.getHp() >= 0) {
-            int skeletonHp = gp.skeleton.getHp() - gp.player.getAttack();
-            gp.skeleton.setHp(skeletonHp);
+        int skeletonHp = gp.skeleton.getHp() - gp.player.getAttack();
+        gp.skeleton.setHp(skeletonHp);
 
-            int playerHp = gp.player.getHp() - gp.skeleton.getSpecialAttack();
-            gp.player.setHp(playerHp);
+        if (gp.skeleton.getHp() <= 0) {
 
-            gp.ui.battleMessage = "The player attacks and does " + gp.player.getAttack() + " damage";
-            gp.ui.messageActive = true;
-
-            gp.ui.battleMessage = "The skeleton attacks back and does " + gp.skeleton.getSpecialAttack() + " damage";
-        } else {
-            //gp.ui.battleMessage = "Enemy Defeated! EXP Gained: " + gp.skeleton.getExpDrop();
-            //gp.ui.messageActive = true;
-
-            gp.skeleton.setHp(50);
             gp.player.setExp(gp.player.getExp() + gp.skeleton.getExpDrop());
 
+            gp.skeleton.setHp(gp.skeleton.maxHp);
             gp.gameState = gp.playState;
+        } else {
+            int playerHp = gp.player.getHp() - gp.skeleton.getAttack();
+            gp.player.setHp(playerHp);
+
+            gp.ui.battleMessage = "The skeleton attacks back and does " + gp.skeleton.getAttack() + " damage.";
+            gp.ui.messageActive = true;
         }
     }
+
 
     public void handleSpecialAttack() {
-        if (gp.skeleton.getHp() >= 0) {
-            int skeletonHp = gp.skeleton.getHp() - gp.player.getSpecialAttack();
-            gp.skeleton.setHp(skeletonHp);
+        int skeletonHp = gp.skeleton.getHp() - gp.player.getSpecialAttack();
+        gp.skeleton.setHp(skeletonHp);
 
-            int playerHp = gp.player.getHp() - gp.skeleton.getSpecialAttack();
-            gp.player.setHp(playerHp);
+        if (gp.skeleton.getHp() <= 0) {
 
-            gp.ui.battleMessage = "The player uses a special attack and does " + gp.player.getSpecialAttack() + " damage";
-            gp.ui.messageActive = true;
-
-            gp.ui.battleMessage = "The skeleton attacks back and does " + gp.skeleton.getSpecialAttack() + " damage";
-        } else {
-            //gp.ui.battleMessage = "Enemy Defeated! EXP Gained: " + gp.skeleton.getExpDrop();
-        	//gp.ui.messageActive = true;
-        	
-            gp.skeleton.setHp(50);
             gp.player.setExp(gp.player.getExp() + gp.skeleton.getExpDrop());
 
+            gp.skeleton.setHp(gp.skeleton.maxHp);
             gp.gameState = gp.playState;
+        } else {
+            int playerHp = gp.player.getHp() - gp.skeleton.getAttack();
+            gp.player.setHp(playerHp);
+
+            gp.ui.battleMessage = "The skeleton attacks back and does " + gp.skeleton.getAttack() + " damage.";
+            gp.ui.messageActive = true;
         }
     }
 
-    public void handleUltimate() {
-        System.out.println("Not ready!");
+    public void handleRun() {
+    	Random rand = new Random();
+        
+        if (rand.nextBoolean()) { 
+            gp.ui.battleMessage = "Can not Run! The skeleton attacks back and does "+ gp.skeleton.getAttack() + " damage.";
+            gp.ui.messageActive = true;
+            int playerHp = gp.player.getHp() - gp.skeleton.getAttack();
+            gp.player.setHp(playerHp);
+        }else {
+        	gp.gameState = gp.playState;
+        }
     }
 
     public void handleItem() {
-        System.out.println("No Items!");
+    	if(gp.player.getPotion()>=1) {
+    		gp.player.setHp((gp.player.getHp())+20);
+    		gp.ui.battleMessage = "Used Potion and Gained 20HP";
+            gp.ui.messageActive = true;
+    	}
+    	else {
+    		gp.ui.battleMessage = "No potions available!";
+            gp.ui.messageActive = true;
+    	}
+        
     }
 }
 

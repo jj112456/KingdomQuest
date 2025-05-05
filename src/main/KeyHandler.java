@@ -3,9 +3,6 @@ package main;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import ai.CombatSystemZombie;
 import ai.CombatSystemSlime;
 import ai.CombatSystemGhost;
@@ -56,16 +53,20 @@ public class KeyHandler implements KeyListener{
 			}
 			if(code == KeyEvent.VK_ENTER) {
 				if(gp.ui.commandNum == 0) {
+					// NEW GAME
 					gp.gameState = gp.playState;
 					gp.playMusic(0);
 				}
 				if(gp.ui.commandNum == 1) {
-					// ADD WHEN LOADING SAVE
+					// LOAD GAME
 					gp.saveLoad.load();
 					gp.gameState = gp.playState;
+					//gp.gameState = gp.dialogueStateObject;
+					//gp.ui.showMessage("Save Successfully Loaded");
 					gp.playMusic(0);
 				}
 				if(gp.ui.commandNum == 2) {
+					// EXIT GAME
 					System.exit(0);
 				}
 			}
@@ -96,9 +97,6 @@ public class KeyHandler implements KeyListener{
 				}
 				if(gp.ui.commandNum == 1) {
 					System.exit(0);
-					
-					// I don't know why this isn't working
-					
 				}
 				
 				
@@ -132,8 +130,6 @@ public class KeyHandler implements KeyListener{
 			
 			
 			if(code == KeyEvent.VK_ENTER) {
-				
-				// Add cases here!!!
 				
 			    CombatSystemZombie combatZombie = new CombatSystemZombie(gp);
 			    CombatSystemSlime combatSlime = new CombatSystemSlime(gp);
@@ -185,27 +181,8 @@ public class KeyHandler implements KeyListener{
 			    		combatGhostBoss.handleSpecialAttack();
 			    	}
 			    } 
+			    
 			    if(gp.ui.commandNum == 2) {
-			    	if(gp.gameState == gp.battleStateZombie) {
-			    		combatZombie.handleUltimate();
-			    	}
-			    	if(gp.gameState == gp.battleStateSlime) {
-			    		combatSlime.handleUltimate();
-			    	}
-			    	if(gp.gameState == gp.battleStateGhost) {
-			    		combatGhost.handleUltimate();
-			    	}
-			    	if(gp.gameState == gp.battleStateSkeleton) {
-			    		combatSkeleton.handleUltimate();
-			    	}
-			    	if(gp.gameState == gp.battleStateSkeletonBoss) {
-			    		combatSkeletonBoss.handleUltimate();
-			    	}
-			    	if(gp.gameState == gp.battleStateGhostBoss) {
-			    		combatGhostBoss.handleUltimate();
-			    	}
-			    } 
-			    if(gp.ui.commandNum == 3) {
 			    	if(gp.gameState == gp.battleStateZombie) {
 			    		combatZombie.handleItem();
 			    	}
@@ -225,8 +202,26 @@ public class KeyHandler implements KeyListener{
 			    		combatGhostBoss.handleItem();
 			    	}
 			    }
-			    
-			    
+			    if(gp.ui.commandNum == 3) {
+			    	if(gp.gameState == gp.battleStateZombie) {
+			    		combatZombie.handleRun();
+			    	}
+			    	if(gp.gameState == gp.battleStateSlime) {
+			    		combatSlime.handleRun();
+			    	}
+			    	if(gp.gameState == gp.battleStateGhost) {
+			    		combatGhost.handleRun();
+			    	}
+			    	if(gp.gameState == gp.battleStateSkeleton) {
+			    		combatSkeleton.handleRun();
+			    	}
+			    	if(gp.gameState == gp.battleStateSkeletonBoss) {
+			    		combatSkeletonBoss.handleRun();
+			    	}
+			    	if(gp.gameState == gp.battleStateGhostBoss) {
+			    		combatGhostBoss.handleRun();
+			    	}
+			    } 
 			    
 			    // GAME OVER if Player HP Reaches 0
 				if(gp.player.getHp() <= 0) {
@@ -237,19 +232,15 @@ public class KeyHandler implements KeyListener{
 					
 				// LEVEL PLAYER UP IF EXP REQUIREMENT IS MET
 				if(gp.player.getExp() >= gp.player.getNextLevelExp()) {
-					gp.player.setLvl(gp.player.getLvl() + 1);
 					
-					// FIX THIS				
-					//System.out.print("Player is now level " + gp.player.getLvl());
+					gp.player.levelUpPlayer();
+					
 				}
 			    
 			}
 
 				
 		}
-		
-		
-		
 		
 		// PLAY STATE----------------------------------------------------
 		if (gp.gameState == gp.playState){
@@ -286,6 +277,12 @@ public class KeyHandler implements KeyListener{
 			
 		}
 		
+		// HELP STATE-----------------------------------------------
+		else if(gp.gameState == gp.helpState) {
+			if(code == KeyEvent.VK_ENTER) {
+				gp.gameState = gp.menuState;
+			}
+		}
 		
 		// MENU STATE-----------------------------------------------
 		else if(gp.gameState == gp.menuState) {
@@ -309,28 +306,42 @@ public class KeyHandler implements KeyListener{
 			if(code == KeyEvent.VK_ENTER) {
 				if(gp.ui.commandNum == 0) {
 					// item
+					gp.gameState = gp.dialogueStateObject;
+					gp.ui.showMessage("Keys: " + gp.player.hasKey +"   Potions: " + gp.player.getPotion());
 				}
 				if(gp.ui.commandNum == 1) {
-					// equip
+					// help
+					gp.gameState = gp.helpState;
 				}
 				if(gp.ui.commandNum == 2) {
 					// stats
+					gp.gameState = gp.dialogueStateObject;
+					gp.ui.showMessage("ATK: " + gp.player.getAttack() + "   SP.ATK: " + gp.player.getSpecialAttack()
+					+ "   DEF: " + gp.player.getDefense() + "   SP.DEF: " + gp.player.getSpecialDefense());
+					
 				}
 				if(gp.ui.commandNum == 3) {
-					// settings
+					// save
+					// Update total time before saving
+					long now = System.currentTimeMillis();
+					gp.timePlayed += now - gp.sessionStartTime;
+					gp.sessionStartTime = now;
+
+					gp.saveLoad.save();
+					gp.gameState = gp.dialogueStateObject;
+					gp.ui.showMessage("Game Saved");
 				}
 				if(gp.ui.commandNum == 4) {
-					// save
+					// quit (Saves on exit)
+					long now = System.currentTimeMillis();
+					gp.timePlayed += now - gp.sessionStartTime;
+					gp.sessionStartTime = now;
+
 					gp.saveLoad.save();
-					// add message
+					System.exit(0);
 				}
 			}
 		}
-		
-		
-		
-		
-		
 		
 		// DIALOGUE STATE-------------------------------------
 		else if(gp.gameState == gp.dialogueState) {
@@ -347,10 +358,6 @@ public class KeyHandler implements KeyListener{
 		}
 	}
 
-	
-	
-	
-	
 	
 	@Override
 	public void keyReleased(KeyEvent e) {

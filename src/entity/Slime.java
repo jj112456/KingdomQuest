@@ -18,7 +18,7 @@ public class Slime extends Entity {
         maxHp = 20;
         
         attack = 5;
-        expDrop = 10;
+        expDrop = 15;
     }
 
     public BufferedImage getSlimeImage() {

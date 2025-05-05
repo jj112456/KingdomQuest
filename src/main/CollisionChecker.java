@@ -1,7 +1,6 @@
 package main;
 
 import entity.Entity;
-import java.util.Random;
 
 public class CollisionChecker {
 	

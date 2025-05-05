@@ -41,6 +41,13 @@ public class SaveLoad {
 		    
 		    ds.potion = gp.player.potion;
 		    
+		    ds.hasKey = gp.player.hasKey;
+		    
+		    ds.worldX = gp.player.worldX;
+		    ds.worldY = gp.player.worldY;
+		    
+		    ds.timePlayed = gp.timePlayed;
+		    
 		    oos.writeObject(ds);
 		    
 		}
@@ -72,17 +79,20 @@ public class SaveLoad {
 			gp.player.currency = ds.currency;
 
 			gp.player.potion = ds.potion;
-
 			
+			gp.player.hasKey = ds.hasKey;
+			
+			gp.player.worldX = ds.worldX;
+			gp.player.worldY = ds.worldY;
+			
+			gp.timePlayed = ds.timePlayed;
+			gp.sessionStartTime = System.currentTimeMillis(); // reset for new session
+
 			
 		}
 		catch(Exception e){
 			System.out.println("Error: Could Not Load Save!");
 		}
 	}
-	
-	
-	
-	
 	
 }

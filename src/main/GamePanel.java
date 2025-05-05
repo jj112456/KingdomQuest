@@ -4,11 +4,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 
 import entity.Player;
 import entity.Skeleton;
-import entity.Entity;
 import entity.Ghost;
 import entity.Zombie;
 import entity.Slime;
@@ -23,6 +21,12 @@ import javax.swing.JPanel;
 import data.SaveLoad;
 
 public class GamePanel extends JPanel implements Runnable{
+	
+	public long timePlayed = 0;      // total time in ms
+	public long sessionStartTime = System.currentTimeMillis(); // when the session started
+	
+	public String locationText = "Overworld";
+	public boolean stairTracker = true;
 	
 	//Screen Settings
 	final int originalTileSize = 32; // 32x32 titles
@@ -58,24 +62,16 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	// ENTITY AND OBJECT
 	public Player player = new Player(this,keyH);
-	
-	//public Entity enemy[] = new Entity[20];
-	
 	public Ghost ghost = new Ghost(null);
-	
 	public Zombie zombie = new Zombie(null);
-	
 	public SkeletonBoss skeletonBoss = new SkeletonBoss(null);
-	
 	public Slime slime = new Slime(null);
-	
 	public GhostBoss ghostBoss = new GhostBoss(null);
-	
 	public Skeleton skeleton = new Skeleton(null);
 	
 	
 	// OBJECT DISPLAY LIMIT (increase if necessary)
-	public SuperObject obj[] = new SuperObject[15];
+	public SuperObject obj[] = new SuperObject[25];
 	
 	
 	// GAME STATE
@@ -95,6 +91,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public final int battleStateSkeletonBoss = 10;
 	public final int battleStateGhostBoss = 11;
 	
+	public final int helpState = 12;
 	
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -124,11 +121,6 @@ public class GamePanel extends JPanel implements Runnable{
 		double nextDrawTime = System.nanoTime() + drawInterval;
 		
 		while (gameThread != null) {
-			//System.out.println("The game loop is running");
-			
-			//long currentTime = System.nanoTime();
-			//System.out.println("Current time is: " + currentTime);
-			
 			// 1. Update info like character positions
 			update();
 			// 2. Draw the screen with the updated information
@@ -178,7 +170,7 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		// OTHERS
 		else {
-			// draws tiles
+		// draws tiles
 		tileM.draw(g2);
 		
 		//draws world objects
@@ -195,7 +187,6 @@ public class GamePanel extends JPanel implements Runnable{
 		//UI
 		ui.draw(g2, keyH);
 		
-		//g2.dispose();
 		}
 		
 		
@@ -208,20 +199,6 @@ public class GamePanel extends JPanel implements Runnable{
 	    int playerCol = gp.player.worldX / gp.tileSize;
 	    int playerRow = gp.player.worldY / gp.tileSize;
 	    int tileNum = gp.tileM.mapTileNum[playerCol][playerRow];
-	    // TEMP
-	    
-	    /*
-	    if (gp.tileM.tile[tileNum].hasEncountersGrass) {
-	        Random rand = new Random();
-	        int chance = rand.nextInt(100); // Random number between 0-99
-	        if (chance < 3) { // 3% encounter rate
-	        	
-	        	gp.gameState = gp.battleStateZombie;
-	        	gp.gameState = gp.battleStateSlime;
-	        	
-	        }
-	    }
-	    */
 	    
 	    
 	    if (gp.tileM.tile[tileNum].hasEncountersGrass) {
@@ -239,7 +216,7 @@ public class GamePanel extends JPanel implements Runnable{
 	    
 	    if (gp.tileM.tile[tileNum].hasEncountersWood) {
 	        Random rand = new Random();
-	        int chance = rand.nextInt(100); // 0–99
+	        int chance = rand.nextInt(100);
 
 	        if (chance < 3) { // 3% encounter rate
 	            if (rand.nextBoolean()) {
@@ -249,8 +226,6 @@ public class GamePanel extends JPanel implements Runnable{
 	            }
 	        }
 	    }
-	    
-	    
 	    
 	}
 	

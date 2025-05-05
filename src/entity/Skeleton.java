@@ -14,10 +14,10 @@ public class Skeleton extends Entity {
 		super();
         type = 1;
         name = "Skeleton";
-        hp = 30;
-        maxHp = 30;
+        hp = 50;
+        maxHp = 50;
         
-        attack = 10;
+        attack = 15;
         expDrop = 25;
 		
 	}

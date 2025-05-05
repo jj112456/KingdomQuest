@@ -2,6 +2,8 @@ package data;
 
 import java.io.Serializable;
 
+//import object.SuperObject;
+
 public class DataStorage implements Serializable {
 	
 	// PLAYER STATS
@@ -24,7 +26,17 @@ public class DataStorage implements Serializable {
 	
 	public int potion;
 	
-	// save objects and other things
+	public int hasKey;
+	
+
+	public int worldX;
+	public int worldY;
+	
+	public long timePlayed;
+	
+	// save objects on map
+	
+	//public SuperObject obj[] = new SuperObject[15];
 	
 	
 }

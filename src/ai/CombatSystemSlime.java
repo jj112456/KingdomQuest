@@ -1,5 +1,7 @@
 package ai;
 
+import java.util.Random;
+
 import main.GamePanel;
 
 public class CombatSystemSlime {
@@ -11,57 +13,68 @@ public class CombatSystemSlime {
     }
 
     public void handleAttack() {
-        if (gp.slime.getHp() >= 0) {
-            int slimeHp = gp.slime.getHp() - gp.player.getAttack();
-            gp.slime.setHp(slimeHp);
+        int slimeHp = gp.slime.getHp() - gp.player.getAttack();
+        gp.slime.setHp(slimeHp);
 
+        if (gp.slime.getHp() <= 0) {
+
+            gp.player.setExp(gp.player.getExp() + gp.slime.getExpDrop());
+
+            gp.slime.setHp(gp.slime.maxHp);
+            gp.gameState = gp.playState;
+        } else {
             int playerHp = gp.player.getHp() - gp.slime.getAttack();
             gp.player.setHp(playerHp);
 
-            gp.ui.battleMessage = "The player attacks and does " + gp.player.getAttack() + " damage";
+            gp.ui.battleMessage = "The slime attacks back and does " + gp.slime.getAttack() + " damage.";
             gp.ui.messageActive = true;
-
-            gp.ui.battleMessage = "The slime attacks back and does " + gp.slime.getAttack() + " damage";
-        } else {
-            //gp.ui.battleMessage = "Enemy Defeated! EXP Gained: " + gp.slime.getExpDrop();
-            //gp.ui.messageActive = true;
-
-            gp.slime.setHp(50);
-            gp.player.setExp(gp.player.getExp() + gp.slime.getExpDrop());
-
-            gp.gameState = gp.playState;
         }
     }
+
 
     public void handleSpecialAttack() {
-        if (gp.slime.getHp() >= 0) {
-            int slimeHp = gp.slime.getHp() - gp.player.getSpecialAttack();
-            gp.slime.setHp(slimeHp);
+        int slimeHp = gp.slime.getHp() - gp.player.getSpecialAttack();
+        gp.slime.setHp(slimeHp);
 
+        if (gp.slime.getHp() <= 0) {
+
+            gp.player.setExp(gp.player.getExp() + gp.slime.getExpDrop());
+
+            gp.slime.setHp(gp.slime.maxHp); // Resetting slime for future fights?
+            gp.gameState = gp.playState;
+        } else {
             int playerHp = gp.player.getHp() - gp.slime.getAttack();
             gp.player.setHp(playerHp);
 
-            gp.ui.battleMessage = "The player uses a special attack and does " + gp.player.getSpecialAttack() + " damage";
+            gp.ui.battleMessage = "The slime attacks back and does " + gp.slime.getAttack() + " damage.";
             gp.ui.messageActive = true;
-
-            gp.ui.battleMessage = "The slime attacks back and does " + gp.slime.getAttack() + " damage";
-        } else {
-            //gp.ui.battleMessage = "Enemy Defeated! EXP Gained: " + gp.slime.getExpDrop();
-        	//gp.ui.messageActive = true;
-        	
-            gp.slime.setHp(50);
-            gp.player.setExp(gp.player.getExp() + gp.slime.getExpDrop());
-
-            gp.gameState = gp.playState;
         }
     }
 
-    public void handleUltimate() {
-        System.out.println("Not ready!");
+    public void handleRun() {
+    	Random rand = new Random();
+        
+        if (rand.nextBoolean()) { 
+            gp.ui.battleMessage = "Can not Run! The slime attacks back and does "+ gp.slime.getAttack() + " damage.";
+            gp.ui.messageActive = true;
+            int playerHp = gp.player.getHp() - gp.slime.getAttack();
+            gp.player.setHp(playerHp);
+        }else {
+        	gp.gameState = gp.playState;
+        }
     }
 
     public void handleItem() {
-        System.out.println("No Items!");
+    	if(gp.player.getPotion()>=1) {
+    		gp.player.setHp((gp.player.getHp())+20);
+    		gp.ui.battleMessage = "Used Potion and Gained 20HP";
+            gp.ui.messageActive = true;
+    	}
+    	else {
+    		gp.ui.battleMessage = "No potions available!";
+            gp.ui.messageActive = true;
+    	}
+        
     }
 }
 

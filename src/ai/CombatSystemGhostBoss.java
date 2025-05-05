@@ -11,57 +11,60 @@ public class CombatSystemGhostBoss {
     }
 
     public void handleAttack() {
-        if (gp.ghostBoss.getHp() >= 0) {
-            int ghostBossHp = gp.ghostBoss.getHp() - gp.player.getAttack();
-            gp.ghostBoss.setHp(ghostBossHp);
+        int ghostBossHp = gp.ghostBoss.getHp() - gp.player.getAttack();
+        gp.ghostBoss.setHp(ghostBossHp);
 
+        if (gp.ghostBoss.getHp() <= 0) {
+
+            gp.player.setExp(gp.player.getExp() + gp.ghostBoss.getExpDrop());
+
+            gp.ghostBoss.setHp(gp.ghostBoss.maxHp);
+            gp.gameState = gp.playState;
+        } else {
             int playerHp = gp.player.getHp() - gp.ghostBoss.getSpecialAttack();
             gp.player.setHp(playerHp);
 
-            gp.ui.battleMessage = "The player attacks and does " + gp.player.getAttack() + " damage";
+            gp.ui.battleMessage = "The Ghost Boss attacks back and does " + gp.ghostBoss.getSpecialAttack() + " damage.";
             gp.ui.messageActive = true;
-
-            gp.ui.battleMessage = "The ghostBoss attacks back and does " + gp.ghostBoss.getSpecialAttack() + " damage";
-        } else {
-            //gp.ui.battleMessage = "Enemy Defeated! EXP Gained: " + gp.ghostBoss.getExpDrop();
-            //gp.ui.messageActive = true;
-
-            gp.ghostBoss.setHp(50);
-            gp.player.setExp(gp.player.getExp() + gp.ghostBoss.getExpDrop());
-
-            gp.gameState = gp.playState;
         }
     }
+
 
     public void handleSpecialAttack() {
-        if (gp.ghostBoss.getHp() >= 0) {
-            int ghostBossHp = gp.ghostBoss.getHp() - gp.player.getSpecialAttack();
-            gp.ghostBoss.setHp(ghostBossHp);
+        int ghostBossHp = gp.ghostBoss.getHp() - gp.player.getSpecialAttack();
+        gp.ghostBoss.setHp(ghostBossHp);
 
+        if (gp.ghostBoss.getHp() <= 0) {
+
+            gp.player.setExp(gp.player.getExp() + gp.ghostBoss.getExpDrop());
+
+            gp.ghostBoss.setHp(gp.ghostBoss.maxHp);
+            gp.gameState = gp.playState;
+        } else {
             int playerHp = gp.player.getHp() - gp.ghostBoss.getSpecialAttack();
             gp.player.setHp(playerHp);
 
-            gp.ui.battleMessage = "The player uses a special attack and does " + gp.player.getSpecialAttack() + " damage";
+            gp.ui.battleMessage = "The Ghost Boss attacks back and does " + gp.ghostBoss.getSpecialAttack() + " damage.";
             gp.ui.messageActive = true;
-
-            gp.ui.battleMessage = "The ghostBoss attacks back and does " + gp.ghostBoss.getSpecialAttack() + " damage";
-        } else {
-            //gp.ui.battleMessage = "Enemy Defeated! EXP Gained: " + gp.ghostBoss.getExpDrop();
-        	//gp.ui.messageActive = true;
-        	
-            gp.ghostBoss.setHp(50);
-            gp.player.setExp(gp.player.getExp() + gp.ghostBoss.getExpDrop());
-
-            gp.gameState = gp.playState;
         }
     }
 
-    public void handleUltimate() {
-        System.out.println("Not ready!");
+    public void handleRun() {
+    	gp.ui.battleMessage = "Can not Run from a Boss Battle!";
+        gp.ui.messageActive = true;
     }
 
     public void handleItem() {
-        System.out.println("No Items!");
+    	if(gp.player.getPotion()>=1) {
+    		gp.player.setHp((gp.player.getHp())+20);
+    		gp.ui.battleMessage = "Used Potion and Gained 20HP";
+            gp.ui.messageActive = true;
+    	}
+    	else {
+    		gp.ui.battleMessage = "No potions available!";
+            gp.ui.messageActive = true;
+    	}
+        
     }
 }
 

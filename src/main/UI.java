@@ -12,10 +12,6 @@ import java.text.DecimalFormat;
 
 import javax.imageio.ImageIO;
 
-import entity.Entity;
-import entity.Ghost;
-import entity.Player;
-
 public class UI {
 	
 	GamePanel gp;
@@ -47,8 +43,8 @@ public class UI {
 	private BufferedImage playerBattleImage;
 	private BufferedImage enemyBattleImage;
 	
-	
-	
+	private BufferedImage titleBackground;
+
 	
 	
 	// Create Player and enemy here?
@@ -61,12 +57,6 @@ public class UI {
 	public UI(GamePanel gp) {
 		this.gp = gp;
 		
-		/*
-		// Get the ghost image after gp is initialized
-	    if (gp.ghost != null) {
-	        enemyBattleImage = gp.ghost.getGhostImage();
-	    }
-		*/
 		
 		InputStream is = getClass().getResourceAsStream("/font/final_fantasy_36_font.ttf");
 		try {
@@ -97,19 +87,24 @@ public class UI {
 	    
 	    /*
 	    try {
-	        InputStream is4 = getClass().getResourceAsStream("/enemy/ghost.png");
-	        enemyBattleImage = ImageIO.read(is4);
+	        InputStream is4 = getClass().getResourceAsStream("/backgrounds/castleBackground.png");
+	        playerBattleImage = ImageIO.read(is4);
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
-		*/
+	    */
+	    
+	    try {
+	        titleBackground = ImageIO.read(getClass().getResourceAsStream("/backgrounds/castleBackground.png"));
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	    
 	    
 	}
 
 
 	public void showMessage(String text) {
-		// stop player when text appears
-		//player.speed = 0;
 		message = text;
 		messageOn = true;
 	}
@@ -127,7 +122,6 @@ public class UI {
 		}
 		// PLAY STATE
 		if (gp.gameState == gp.playState) {
-			// play state
 			//add music
 			//gp.playMusic(0);
 		}
@@ -145,7 +139,10 @@ public class UI {
 		if(gp.gameState == gp.gameOverState) {
 			drawGameOverScreen();
 		}
-		
+		// HELP STATE
+		if(gp.gameState == gp.helpState) {
+			drawHelpScreen();
+		}
 		
 		
 		
@@ -176,7 +173,7 @@ public class UI {
 		}
 		// BOSS BATTLES -------------------------------------------------------
 		if(gp.gameState == gp.battleStateSkeletonBoss) {
-			BufferedImage someEnemyImage = gp.skeleton.getSkeletonImage();
+			BufferedImage someEnemyImage = gp.skeletonBoss.getSkeletonBossImage();
 			gp.ui.setEnemyBattleImage(someEnemyImage);
 			drawBattleScreen();
 			
@@ -187,9 +184,6 @@ public class UI {
 			drawBattleScreen();
 			
 		}
-		
-		
-		
 		
 		
 		
@@ -291,46 +285,105 @@ public class UI {
 	
 	
 	
+	// HELP SCREEN ----------------------------------------------------
+	public void drawHelpScreen() {
+		//Background
+		g2.setColor(Color.black);
+		g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+				
+				
+		// main box
+		Color c = new Color(10, 29, 97);
+		g2.setColor(c);
+		
+		g2.fillRoundRect(75, 50, 600, gp.screenHeight-100, 35, 35);
+		// main box border
+		g2.setColor(Color.white);
+		g2.setStroke(new BasicStroke(5));
+		g2.drawRoundRect(75+5, 50+5, 600-10, (gp.screenHeight-100)-10, 25, 25);
+		
+		
+		g2.setFont(FF6Font.deriveFont(Font.BOLD, 60F));
+		   
+		g2.setColor(Color.black);
+		g2.drawString("How to Play:", 95+5, 105+5);
+		g2.setColor(Color.white);
+		g2.drawString("How to Play:", 95, 105);
+		
+		g2.setFont(FF6Font.deriveFont(Font.BOLD, 40F));
+		
+		g2.setColor(Color.black);
+		g2.drawString("Be careful! There are enemies", 95+5, 155+5);
+		g2.setColor(Color.white);
+		g2.drawString("Be careful! There are enemies", 95, 155);
+		
+		g2.setColor(Color.black);
+		g2.drawString("around. Try to make your way", 95+5, 185+5);
+		g2.setColor(Color.white);
+		g2.drawString("around. Try to make your way", 95, 185);
+		
+		g2.setColor(Color.black);
+		g2.drawString("through the maze and find the key", 95+5, 215+5);
+		g2.setColor(Color.white);
+		g2.drawString("through the maze and find the key", 95, 215);
+		
+		g2.setColor(Color.black);
+		g2.drawString("to get inside the castle. Make sure", 95+5, 245+5);
+		g2.setColor(Color.white);
+		g2.drawString("to get inside the castle. Make sure", 95, 245);
+		
+		g2.setColor(Color.black);
+		g2.drawString("you fight plenty of enemies to", 95+5, 275+5);
+		g2.setColor(Color.white);
+		g2.drawString("you fight plenty of enemies to", 95, 275);
+		
+		
+		g2.setColor(Color.black);
+		g2.drawString("level up. There is a powerful boss", 95+5, 305+5);
+		g2.setColor(Color.white);
+		g2.drawString("level up. There is a powerful boss", 95, 305);
+		
+		g2.setColor(Color.black);
+		g2.drawString("at the end!", 95+5, 335+5);
+		g2.setColor(Color.white);
+		g2.drawString("at the end!", 95, 335);
+	}
+	
+	
+	
 	// TITLE SCREEN ---------------------------------------------------
 	public void drawTitleScreen() {
 		
 		//Background
-		g2.setColor(Color.LIGHT_GRAY);
-		g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
-		
-		// Box
-		int x2 = 25;
-		int y2 = 25;
-		int width = gp.screenWidth - 50;
-		int height = 200;
-		drawTextBox(x2, y2, width, height);
-		
-		x2 += gp.tileSize;
-		y2 += gp.tileSize;
-		g2.drawString(currentText, x2, y2);
+		if (titleBackground != null) {
+		    g2.drawImage(titleBackground, 0, 0, gp.screenWidth, gp.screenHeight, null);
+		}
 		
 		
-		//Title Name
-		g2.setFont(FF6Font.deriveFont(Font.BOLD, 80F));
+		
+		// Title Name
+		g2.setFont(new Font("Serif", Font.BOLD, 100));
 
 		String text = "Kingdom Quest";
-		int x = 85;
-		int y = 125;
+		int x = 50;
+		int y = 200;
 		
 		
 		// shadow
-		g2.setColor(Color.black);
-		g2.drawString(text, x+5, y+5);
+		g2.setColor(Color.BLACK);
+		g2.drawString(text, x+2, y+2);
 		
 		// text
-		g2.setColor(Color.white);
+		g2.setColor(Color.WHITE);
 		g2.drawString(text, x, y);
 		
 		
 		
 		//MENU
-		g2.setFont(g2.getFont().deriveFont(Font.CENTER_BASELINE,50F));
-		g2.setColor(Color.black);
+		g2.setFont(FF6Font.deriveFont(Font.BOLD, 50F));
+		
+		//g2.setFont(g2.getFont().deriveFont(Font.CENTER_BASELINE,50F));
+		g2.setColor(Color.white);
 		
 		
 		text = "New Game";
@@ -419,7 +472,8 @@ public class UI {
 		g2.setFont(FF6Font.deriveFont(Font.BOLD, 50F));
 
 		
-		String text2 = "Overworld";  // add code to display Current Location
+		String text2 = gp.locationText;
+		
 		g2.setColor(Color.black);
 		g2.drawString(text2, 400+5, 625+5);
 		
@@ -427,7 +481,7 @@ public class UI {
 		g2.drawString(text2, 400, 625);
 		
 		
-		String text4 = "Item";  // ADD CODE TO SAVE
+		String text4 = "Item";   
 		g2.setColor(Color.black);
 		g2.drawString(text4, 525+5, 75+5);
 		
@@ -441,7 +495,7 @@ public class UI {
 
 		}
 		
-		String text5 = "Equip";  // ADD CODE TO SAVE
+		String text5 = "Help";   
 		g2.setColor(Color.black);
 		g2.drawString(text5, 525+5, 125+5);
 		
@@ -455,7 +509,7 @@ public class UI {
 
 		}
 		
-		String text6 = "Stats";  // ADD CODE TO SAVE
+		String text6 = "Stats";   
 		g2.setColor(Color.black);
 		g2.drawString(text6, 525+5, 175+5);
 		
@@ -469,7 +523,7 @@ public class UI {
 
 		}
 		
-		String text7 = "Settings";  // ADD CODE TO SAVE
+		String text7 = "Save";   
 		g2.setColor(Color.black);
 		g2.drawString(text7, 525+5, 225+5);
 		
@@ -483,7 +537,7 @@ public class UI {
 
 		}
 		
-		String text3 = "Save";  // ADD CODE TO SAVE
+		String text3 = "Quit";   
 		g2.setColor(Color.black);
 		g2.drawString(text3, 525+5, 400+5);
 		
@@ -499,20 +553,23 @@ public class UI {
 		
 		
 		
-		String text8 = "Time";  // ADD CODE TO SAVE
 		g2.setColor(Color.black);
-		g2.drawString(text8, 560+5, 500+5);
+		g2.drawString("Time:", 560+5, 500+5);
+
+		g2.setColor(Color.white);
+		g2.drawString("Time:", 560, 500);
+
+		long totalSeconds = gp.timePlayed / 1000;
+		long hours = totalSeconds / 3600;
+		long minutes = (totalSeconds % 3600) / 60;
+
+		String timeStr = String.format("%02d:%02d", hours, minutes);
+
+		g2.setColor(Color.black);
+		g2.drawString(timeStr, 560+5, 550+5);
 		
 		g2.setColor(Color.white);
-		g2.drawString(text8, 560, 500);
-		
-		
-		String text9 = "Money";  // ADD CODE TO SAVE
-		g2.setColor(Color.black);
-		g2.drawString(text9, 560+5, 550+5);
-		
-		g2.setColor(Color.white);
-		g2.drawString(text9, 560, 550);
+		g2.drawString(timeStr, 560, 550);
 		
 		
 		
@@ -524,9 +581,9 @@ public class UI {
 		
 		// Draw player image
 	    if (playerBattleImage != null) {
-	        int playerX = 50; // Adjust position as needed
+	        int playerX = 50;
 	        int playerY = 100;
-	        int playerWidth = 128;  // Adjust size as needed
+	        int playerWidth = 128; 
 	        int playerHeight = 128;
 	        g2.drawImage(playerBattleImage, playerX, playerY, playerWidth, playerHeight, null);
 	    }
@@ -561,39 +618,55 @@ public class UI {
 	    g2.drawString(newText101, 200, 260);
 	    
 	    
-	    
-	    
-	    
-	    /*
-	    String text100 = String.valueOf(gp.player.getUltimate());
-	    g2.setColor(Color.black);
-	    g2.drawString(text100, 675, 515);
-	    g2.setColor(Color.white);
-	    g2.drawString(text100, 675, 515);
-	    */
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-		
 	}
 	
 	
 	public void drawBattleScreen() {
 		
 	    Color c = new Color(10, 29, 97);
+	    
+	    //sky
 	    Color c2 = new Color(18, 164, 222);
+	    
+	    //grass
 	    Color c3 = new Color(4, 117, 13);
-
+	    
+	    //wall
+	    Color c4 = new Color(128, 130, 121);
+	    
+	    //floor
+	    Color c5 = new Color(110, 83, 39);
+	    
+	    
+	    
+	    Color c6 = new Color(0,0,0);
+	    
+	    Color c7 = new Color(51, 49, 49);
+	    
 	    // Background
-	    g2.setColor(c3);
-	    g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
-	    g2.setColor(c2);
-	    g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight / 2);
+	    if(gp.gameState == gp.battleStateZombie || gp.gameState == gp.battleStateSlime) {
+		    g2.setColor(c3);
+		    g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+		    
+		    g2.setColor(c2);
+		    g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight / 2);
+	    }
+	    
+	    if(gp.gameState == gp.battleStateGhost || gp.gameState == gp.battleStateSkeleton) {
+		    g2.setColor(c5);
+		    g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+		    
+		    g2.setColor(c4);
+		    g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight / 2);
+	    }
+	    
+	    if(gp.gameState == gp.battleStateGhostBoss || gp.gameState == gp.battleStateSkeletonBoss) {
+		    g2.setColor(c7);
+		    g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+		    
+		    g2.setColor(c6);
+		    g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight / 2);
+	    }
 	    
 
 	    // Draw the player battle sprite
@@ -607,7 +680,7 @@ public class UI {
 
 	    // Draw the ghost (enemy) battle sprite
 	    if (enemyBattleImage == null && gp.ghost != null) {
-	        enemyBattleImage = gp.ghost.getGhostImage(); // Fetch it here if not already loaded
+	        enemyBattleImage = gp.ghost.getGhostImage();
 	    }
 
 	    if (enemyBattleImage != null) {
@@ -615,6 +688,13 @@ public class UI {
 	        int enemyY = 275;  // Adjust position
 	        int enemyWidth = 128;
 	        int enemyHeight = 128;
+	        
+	        if(gp.gameState == gp.battleStateSkeletonBoss || gp.gameState == gp.battleStateGhostBoss) {
+	        	enemyX = enemyX-150;
+	        	enemyY = enemyY-100;
+	        	enemyWidth = 256;
+	        	enemyHeight = 256;
+	        }
 	        g2.drawImage(enemyBattleImage, enemyX, enemyY, enemyWidth, enemyHeight, null);
 	    }
 	    
@@ -658,7 +738,25 @@ public class UI {
 	    g2.setColor(Color.white);
 	    g2.drawString(text3, 400, 475);
 	    
-	    String text4 = "Ultimate";
+	    String text4 = "";
+	    if(gp.gameState == gp.battleStateZombie) {
+	        text4 = "Zombie";
+	    }
+	    else if(gp.gameState == gp.battleStateSlime) {
+	        text4 = "Slime";
+	    }
+	    else if(gp.gameState == gp.battleStateGhost) {
+	        text4 = "Ghost";
+	    }
+	    else if(gp.gameState == gp.battleStateGhostBoss) {
+	        text4 = "Ghost Boss";
+	    }
+	    else if(gp.gameState == gp.battleStateSkeleton) {
+	        text4 = "Skeleton";
+	    }
+	    else if(gp.gameState == gp.battleStateSkeletonBoss) {
+	        text4 = "Skeleton Boss";
+	    }
 	    g2.setColor(Color.black);
 	    g2.drawString(text4, 500, 475);
 	    g2.setColor(Color.white);
@@ -682,13 +780,6 @@ public class UI {
 	    g2.setColor(Color.white);
 	    g2.drawString(text99, 400, 515);
 	    
-	    /*
-	    String text100 = String.valueOf(gp.player.getUltimate());
-	    g2.setColor(Color.black);
-	    g2.drawString(text100, 675, 515);
-	    g2.setColor(Color.white);
-	    g2.drawString(text100, 675, 515);
-	    */
 	    
 	    String text101 = String.valueOf(gp.player.getExp());
 	    g2.setColor(Color.black);
@@ -734,7 +825,7 @@ public class UI {
 
 		}
 	    
-	    String text9 = "Ultimate";
+	    String text9 = "Potion";
 	    g2.setColor(Color.black);
 	    g2.drawString(text9, 175, 575);
 	    g2.setColor(Color.white);
@@ -747,7 +838,7 @@ public class UI {
 
 		}
 	    
-	    String text10 = "Item";
+	    String text10 = "Run";
 	    g2.setColor(Color.black);
 	    g2.drawString(text10, 175, 605);
 	    g2.setColor(Color.white);
@@ -808,12 +899,12 @@ public class UI {
 		    g2.drawString(text13, 175, 545);
 		    g2.setColor(Color.white);
 		    g2.drawString(text13, 175, 545);
-		    String text14 = "Ultimate";
+		    String text14 = "Potion";
 		    g2.setColor(Color.black);
 		    g2.drawString(text14, 175, 575);
 		    g2.setColor(Color.white);
 		    g2.drawString(text14, 175, 575); 
-		    String text15 = "Item";
+		    String text15 = "Run";
 		    g2.setColor(Color.black);
 		    g2.drawString(text15, 175, 605);
 		    g2.setColor(Color.white);
@@ -823,14 +914,12 @@ public class UI {
 	        // Battle Text
 		    g2.setFont(g2.getFont().deriveFont(30F));
 	        g2.setColor(Color.white);
-	        g2.drawString(battleMessage, 10, 436); // Adjust X/Y for positioning
+	        g2.drawString(battleMessage, 10, 436);
 	        
 	    }
 	    
 	}
 
-	
-	
 	
 	public void drawDialogueScreen() {
 		// WINDOW

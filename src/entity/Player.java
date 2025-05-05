@@ -1,6 +1,5 @@
 package entity;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -10,9 +9,7 @@ import javax.imageio.ImageIO;
 
 import main.GamePanel;
 import main.KeyHandler;
-import object.OBJ_Chest;
-import object.OBJ_Open_Chest;
-import tile.TileManager;
+import object.OpenChestObject;
 
 public class Player extends Entity{
 	
@@ -46,8 +43,8 @@ public class Player extends Entity{
 	
 	public void setDefaultValues() {
 		// player starting position
-		worldX = 6 * gp.tileSize;
-		worldY = 43 * gp.tileSize;
+		worldX = 37 * gp.tileSize;
+		worldY = 3 * gp.tileSize;
 		speed = 4;
 		direction = "down";
 		
@@ -59,7 +56,7 @@ public class Player extends Entity{
 		hp = 100;
 		maxHp = 100;
 		attack = 10;
-		specialAttack = 10;
+		specialAttack = 8;
 		defense = 10;
 		specialDefense = 10;
 		attackSpeed = 10;
@@ -91,7 +88,17 @@ public class Player extends Entity{
 		}
 	}
 	
-	
+	public void levelUpPlayer() {
+		gp.player.setLvl((gp.player.getLvl())+1);
+		gp.player.setAttack((gp.player.getAttack())+2);
+		gp.player.setSpecialAttack((gp.player.getLvl())+2);
+		gp.player.setMaxHp((gp.player.getMaxHp())+5);
+		gp.player.setDefense((gp.player.getDefense())+2);
+		gp.player.setSpecialDefense((gp.player.getSpecialDefense())+2);
+		
+		gp.ui.battleMessage += "Level Up! Player is now level "+ gp.player.getLvl();
+        gp.ui.messageActive = true;
+	}
 	
 	public void update() {
 
@@ -111,8 +118,7 @@ public class Player extends Entity{
 				direction = "right";
 			}
 			else if(keyH.escapePressed == true) {
-				// no idea why this does not work
-				gp.playSE(2);
+				
 			}
 			
 			// checks tile collision
@@ -177,28 +183,26 @@ public class Player extends Entity{
 				gp.gameState = gp.dialogueStateObject;
 				gp.ui.showMessage("Picked Up: " + "Key");
 				break;
-			case "Mini Boss":
+			case "Skeleton Boss":
 				gp.gameState = gp.battleStateSkeletonBoss;
 				gp.obj[i] = null;
 				break;
-			case "Final Boss":
+			case "Ghost Boss":
 				gp.gameState = gp.battleStateGhostBoss;
 				gp.obj[i] = null;
 				break;
-			case "Chest":
-				//
+			case "Potion Chest":
 				gp.playSE(1);
 				gp.gameState = gp.dialogueStateObject;
 				gp.ui.showMessage("Potion was inside");
 				gp.player.setPotion((gp.player.getPotion())+1);
 				gp.obj[i] = null;
 				
-				gp.obj[7] = new OBJ_Open_Chest();
+				gp.obj[7] = new OpenChestObject();
 				gp.obj[7].worldX = 5 * gp.tileSize;
 				gp.obj[7].worldY = 1 * gp.tileSize;
-				
 				break;
-			case "Silver Chest":
+			case "Armor Chest":
 				gp.playSE(1);
 				gp.gameState = gp.dialogueStateObject;
 				gp.ui.showMessage("Armor was inside (Defense +2)");
@@ -206,21 +210,21 @@ public class Player extends Entity{
 				gp.player.setAttack(gp.player.getSpecialDefense()+2);
 				gp.obj[i] = null;
 				
-				gp.obj[8] = new OBJ_Open_Chest();
+				gp.obj[8] = new OpenChestObject();
 				gp.obj[8].worldX = 7 * gp.tileSize;
 				gp.obj[8].worldY = 28 * gp.tileSize;
 				
 				break;
-			case "Gold Chest":
+			case "Weapon Chest":
 				gp.playSE(1);
 				gp.gameState = gp.dialogueStateObject;
 				gp.ui.showMessage("A new Weapon was inside (Attack +2)");
 				gp.player.setAttack(gp.player.getAttack()+2);
 				gp.obj[i] = null;
 				
-				gp.obj[9] = new OBJ_Open_Chest();
-				gp.obj[9].worldX = 45 * gp.tileSize;
-				gp.obj[9].worldY = 3 * gp.tileSize;
+				gp.obj[9] = new OpenChestObject();
+				gp.obj[9].worldX = 40 * gp.tileSize;
+				gp.obj[9].worldY = 1 * gp.tileSize;
 				break;
 			case "Door":
 				gp.playSE(1);
@@ -231,14 +235,48 @@ public class Player extends Entity{
 					gp.ui.showMessage("Opened door with Key");
 					worldX = gp.tileSize * 47;
 					worldY = gp.tileSize * 3;
+					gp.locationText = "Castle";
 				}
 				else {
 					gp.gameState = gp.dialogueStateObject;
 					gp.ui.showMessage("A key is needed to open the door");
 				}
 				break;
-			// add chest case HERE
-			
+			case "Fire":
+				//gp.playSE(2);
+				gp.player.setHp(gp.player.getHp()-5);
+				break;
+			case "Stairs":
+				gp.playSE(1);
+				if(gp.stairTracker == true) {
+					worldX = gp.tileSize * 36;
+					worldY = gp.tileSize * 11;
+					gp.stairTracker = false;
+				}else {
+					worldX = gp.tileSize * 36;
+					worldY = gp.tileSize * 6;
+					gp.stairTracker = true;
+				}
+				
+				break;
+			// test may not work
+			case "Lever":
+			    gp.playSE(2);
+			    gp.gameState = gp.dialogueStateObject;
+			    gp.ui.showMessage("A Door Opened Nearby");
+
+			    for (int j = 0; j < gp.obj.length; j++) {
+			        if (gp.obj[j] != null && "Cell".equals(gp.obj[j].name)) {
+			            gp.obj[j] = null;
+			            break; // remove first cell found
+			        }
+			    }
+			    break;
+			case "Cell":
+				gp.playSE(1);
+				gp.gameState = gp.dialogueStateObject;
+				gp.ui.showMessage("Locked");
+				break;
 			}
 		}
 	}
