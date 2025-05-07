@@ -37,8 +37,9 @@ public class AssetSetter {
 		
 		
 		gp.obj[3] = new PotionChestObject();
-		gp.obj[3].worldX = 5 * gp.tileSize;
-		gp.obj[3].worldY = 1 * gp.tileSize;
+		gp.obj[3].worldX = 7 * gp.tileSize;
+		gp.obj[3].worldY = 28 * gp.tileSize;
+		
 		
 		
 		
@@ -54,8 +55,9 @@ public class AssetSetter {
 		gp.obj[4].worldY = 0 * gp.tileSize;
 		
 		gp.obj[5] = new ArmorChestObject();
-		gp.obj[5].worldX = 7 * gp.tileSize;
-		gp.obj[5].worldY = 28 * gp.tileSize;
+		gp.obj[5].worldX = 3 * gp.tileSize;
+		gp.obj[5].worldY = 8 * gp.tileSize;
+		
 		
 		
 		
@@ -83,27 +85,7 @@ public class AssetSetter {
 		gp.obj[20].worldY = 13 * gp.tileSize;
 		
 		
-		/*
-		gp.obj[12] = new FireObject();
-		gp.obj[12].worldX = 45 * gp.tileSize;
-		gp.obj[12].worldY = 3 * gp.tileSize;
 		
-		gp.obj[13] = new FireObject();
-		gp.obj[13].worldX = 45 * gp.tileSize;
-		gp.obj[13].worldY = 3 * gp.tileSize;
-		
-		gp.obj[14] = new FireObject();
-		gp.obj[14].worldX = 45 * gp.tileSize;
-		gp.obj[14].worldY = 3 * gp.tileSize;
-		
-		gp.obj[15] = new FireObject();
-		gp.obj[15].worldX = 45 * gp.tileSize;
-		gp.obj[15].worldY = 3 * gp.tileSize;
-		
-		gp.obj[16] = new FireObject();
-		gp.obj[16].worldX = 45 * gp.tileSize;
-		gp.obj[16].worldY = 3 * gp.tileSize;
-		*/
 		
 	}
 }

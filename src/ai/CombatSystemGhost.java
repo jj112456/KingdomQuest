@@ -13,7 +13,7 @@ public class CombatSystemGhost {
     }
 
     public void handleAttack() {
-        int ghostHp = gp.ghost.getHp() - gp.player.getAttack();
+        int ghostHp = gp.ghost.getHp() - (gp.player.getAttack()/4);
         gp.ghost.setHp(ghostHp);
 
         if (gp.ghost.getHp() <= 0) {

@@ -11,7 +11,7 @@ public class CombatSystemGhostBoss {
     }
 
     public void handleAttack() {
-        int ghostBossHp = gp.ghostBoss.getHp() - gp.player.getAttack();
+        int ghostBossHp = gp.ghostBoss.getHp() - (gp.player.getAttack()/4);
         gp.ghostBoss.setHp(ghostBossHp);
 
         if (gp.ghostBoss.getHp() <= 0) {

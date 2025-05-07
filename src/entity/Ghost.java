@@ -19,6 +19,8 @@ public class Ghost extends Entity {
         
         specialAttack = 25;
         expDrop = 25;
+        
+        //specialDefense = 30;
     }
 
     public BufferedImage getGhostImage() {

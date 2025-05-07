@@ -43,8 +43,8 @@ public class Player extends Entity{
 	
 	public void setDefaultValues() {
 		// player starting position
-		worldX = 37 * gp.tileSize;
-		worldY = 3 * gp.tileSize;
+		worldX = 5 * gp.tileSize;
+		worldY = 42 * gp.tileSize;
 		speed = 4;
 		direction = "down";
 		
@@ -93,6 +93,7 @@ public class Player extends Entity{
 		gp.player.setAttack((gp.player.getAttack())+2);
 		gp.player.setSpecialAttack((gp.player.getLvl())+2);
 		gp.player.setMaxHp((gp.player.getMaxHp())+5);
+		gp.player.setHp(gp.player.getMaxHp());
 		gp.player.setDefense((gp.player.getDefense())+2);
 		gp.player.setSpecialDefense((gp.player.getSpecialDefense())+2);
 		
@@ -199,8 +200,8 @@ public class Player extends Entity{
 				gp.obj[i] = null;
 				
 				gp.obj[7] = new OpenChestObject();
-				gp.obj[7].worldX = 5 * gp.tileSize;
-				gp.obj[7].worldY = 1 * gp.tileSize;
+				gp.obj[7].worldX = 7 * gp.tileSize;
+				gp.obj[7].worldY = 28 * gp.tileSize;
 				break;
 			case "Armor Chest":
 				gp.playSE(1);
@@ -211,8 +212,8 @@ public class Player extends Entity{
 				gp.obj[i] = null;
 				
 				gp.obj[8] = new OpenChestObject();
-				gp.obj[8].worldX = 7 * gp.tileSize;
-				gp.obj[8].worldY = 28 * gp.tileSize;
+				gp.obj[8].worldX = 3 * gp.tileSize;
+				gp.obj[8].worldY = 8 * gp.tileSize;
 				
 				break;
 			case "Weapon Chest":
@@ -233,7 +234,7 @@ public class Player extends Entity{
 					hasKey--;
 					gp.gameState = gp.dialogueStateObject;
 					gp.ui.showMessage("Opened door with Key");
-					worldX = gp.tileSize * 47;
+					worldX = gp.tileSize * 41;
 					worldY = gp.tileSize * 3;
 					gp.locationText = "Castle";
 				}
